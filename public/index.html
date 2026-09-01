@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AeroGlide &bull; AI Shopping Agent</title>
+  <title>AI Shopping Concierge &bull; Autonomous Commerce</title>
   <link rel="stylesheet" href="/hero.css" />
   <link rel="stylesheet" href="/style.css" />
   <!-- Razorpay Checkout JS SDK -->
@@ -11,28 +11,25 @@
 </head>
 <body>
   <!-- ==========================================
-       CINEMATIC HERO SECTION ("Product Under Glass")
+       HERO SECTION — Picture-in-Picture Product Mockup & Flow Field
        ========================================== -->
   <section id="hero-section" class="hero-section">
     <!-- Tactile Overlays: SVG Noise Grain & Radial Vignette -->
     <div class="hero-grain"></div>
     <div class="hero-vignette"></div>
 
-    <!-- Ambient Breathing Glow -->
-    <div id="hero-glow" class="hero-ambient-glow"></div>
-
     <!-- Header & Headline -->
     <div class="hero-header-content">
       <div class="hero-badge">
         <span class="hero-badge-dot"></span>
-        <span>AeroGlide Performance Series &bull; AI Commerce Engine</span>
+        <span>AI Shopping Concierge &bull; Autonomous Commerce Engine</span>
       </div>
       <h1 class="hero-title">
         Engineered for Speed.<br />
         <span>Gated by Autonomous AI.</span>
       </h1>
       <p class="hero-subtitle">
-        Explore high-performance marathon gear with zero-trust server validation, explainable coupon intelligence, and verified Razorpay checkouts.
+        Experience autonomous e-commerce with zero-trust server validation, explainable coupon intelligence, and verified Razorpay checkouts.
       </p>
       <div class="hero-cta-group">
         <a href="#chat-app" class="hero-btn-primary">
@@ -44,48 +41,101 @@
       </div>
     </div>
 
-    <!-- 3D Stage & Floating Object under Glass -->
-    <div id="hero-stage" class="hero-stage-container">
-      <div id="hero-3d-card" class="hero-3d-card">
-        <div class="hero-object-glass">
-          <div class="hero-glass-highlight-top"></div>
-          <img
-            src="/assets/aeroglide_hero.jpg"
-            alt="AeroGlide Ultra Marathon Running Shoe"
-            class="hero-product-img"
-          />
-          <!-- Specular Sheen Sweep Tracking Tilt Angle -->
-          <div id="hero-sheen" class="hero-sheen-layer"></div>
+    <!-- Layer 1: Outer Device Frame Container -->
+    <div id="hero-device-frame" class="hero-device-frame">
+      <div class="hero-frame-bezel-top"></div>
 
-          <!-- Dynamic Product HUD Showcase Card -->
-          <div id="hero-hud-card" class="hero-hud-tag" title="Click to ask the AI concierge about this featured item">
-            <div class="hero-hud-header">
-              <span id="hero-hud-name" class="hero-hud-name">AeroGlide Ultra Marathon</span>
-              <span id="hero-hud-price" class="hero-hud-price">$189.99</span>
-            </div>
-            <div class="hero-hud-footer">
-              <div class="hero-hud-meta-left">
-                <span id="hero-hud-category" class="hero-hud-cat">Running</span>
-                <span id="hero-hud-stock" class="hero-hud-stock">In Stock (45)</span>
+      <!-- Layer 2: Flowing Particle Current Background -->
+      <div class="hero-flow-canvas-container">
+        <canvas id="flow-canvas"></canvas>
+      </div>
+
+      <!-- Layer 4: Floating Trust Chips (Backed by Real Architecture) -->
+      <div class="hero-trust-chip top-left">
+        <span class="hero-trust-chip-icon">🛡️</span>
+        <span>Razorpay <strong class="hero-trust-chip-accent">Verified Checkout</strong></span>
+      </div>
+
+      <div class="hero-trust-chip top-right">
+        <span class="hero-trust-chip-icon">⚡</span>
+        <span>Zero-Trust <strong class="hero-trust-chip-accent">Server Pricing</strong></span>
+      </div>
+
+      <div class="hero-trust-chip bottom-right">
+        <span class="hero-trust-chip-icon">📋</span>
+        <span>18 Catalog Items &bull; <strong class="hero-trust-chip-accent">Live Audit Log</strong></span>
+      </div>
+
+      <!-- Layer 3: Floating Product Window (Picture-in-Picture Chat UI) -->
+      <div id="hero-pip-window" class="hero-pip-window">
+        <!-- Minimal Browser Titlebar Chrome -->
+        <div class="hero-pip-titlebar">
+          <div class="hero-pip-dots">
+            <span class="hero-pip-dot red"></span>
+            <span class="hero-pip-dot yellow"></span>
+            <span class="hero-pip-dot green"></span>
+          </div>
+          <div class="hero-pip-title">
+            <span>AI Shopping Concierge</span>
+            <span class="hero-pip-live-badge">LIVE SESSION</span>
+          </div>
+          <div style="width: 40px;"></div>
+        </div>
+
+        <!-- Authentic Conversation Transcript from Real Catalog -->
+        <div class="hero-pip-body">
+          <!-- 1. User Message -->
+          <div class="mock-msg-user">
+            Show me running shoes under $180
+          </div>
+
+          <!-- 2. Assistant Message with Real Products -->
+          <div class="mock-msg-assistant">
+            <div>I found two verified running shoes in our catalog matching your budget:</div>
+            
+            <div class="mock-products-row">
+              <!-- Real Product 1 -->
+              <div class="mock-product-card">
+                <div class="mock-prod-title">CloudStrider Daily Trainer</div>
+                <div class="mock-prod-price">$139.50</div>
+                <div class="mock-prod-meta">
+                  <span class="mock-prod-badge">Running</span>
+                  <span class="mock-prod-stock">In Stock (60)</span>
+                </div>
               </div>
-              <div id="hero-showcase-dots" class="hero-showcase-dots"></div>
+
+              <!-- Real Product 2 -->
+              <div class="mock-product-card">
+                <div class="mock-prod-title">VortexStability Runners</div>
+                <div class="mock-prod-price">$145.00</div>
+                <div class="mock-prod-meta">
+                  <span class="mock-prod-badge">Running</span>
+                  <span class="mock-prod-stock">In Stock (42)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. User Message Applying Coupon -->
+          <div class="mock-msg-user">
+            Apply coupon SPRINT20 and checkout
+          </div>
+
+          <!-- 4. Assistant Verified Checkout Message -->
+          <div class="mock-msg-assistant">
+            <div>✅ Applied coupon <strong>SPRINT20</strong> (-$27.90 discount). Subtotal: $139.50 &bull; Total: <strong>$111.60</strong></div>
+            
+            <div class="mock-checkout-box">
+              <div class="mock-checkout-left">
+                <span class="mock-checkout-title">Razorpay Order #TWeG1s</span>
+                <span class="mock-checkout-sub">Verified Total: $111.60</span>
+              </div>
+              <button class="mock-btn-pay">
+                <span>💳 Pay via Razorpay</span>
+              </button>
             </div>
           </div>
         </div>
-      </div>
-
-      <!-- Reactive Liquid Ground Plane (Canvas 2D Ripples) -->
-      <div class="hero-ground-plane">
-        <canvas id="ripple-canvas"></canvas>
-      </div>
-
-      <!-- Mirrored Blurred Reflection -->
-      <div id="hero-reflection" class="hero-reflection-wrapper">
-        <img
-          src="/assets/aeroglide_hero.jpg"
-          alt="AeroGlide Reflection"
-          class="hero-reflection-img"
-        />
       </div>
     </div>
   </section>
