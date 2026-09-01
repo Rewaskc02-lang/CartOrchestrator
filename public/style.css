@@ -22,9 +22,10 @@ body {
   padding: 0;
 }
 
-/* Chat Section Container */
+/* Chat Section Container with Flowing Particle Current Background */
 .chat-section-container {
   width: 100%;
+  min-height: 90vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -32,23 +33,49 @@ body {
   background: radial-gradient(circle at 50% 10%, #0e1628 0%, #070a13 60%, #03060c 100%);
   position: relative;
   z-index: 10;
+  overflow: hidden;
+}
+
+.chat-flow-canvas-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.chat-ambient-glow {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 750px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.14) 0%, rgba(37, 99, 235, 0.05) 45%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 2;
 }
 
 .chat-wrapper {
+  position: relative;
+  z-index: 5;
   width: 100%;
   max-width: 920px;
   height: 84vh;
   min-height: 600px;
-  background: rgba(11, 15, 25, 0.85);
+  background: rgba(11, 15, 25, 0.88);
   border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   display: flex;
   flex-direction: column;
   box-shadow: 
-    0 25px 60px -12px rgba(0, 0, 0, 0.8),
-    0 0 0 1px rgba(255, 255, 255, 0.05),
-    inset 0 1px 1px rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(16px);
+    0 30px 70px -15px rgba(0, 0, 0, 0.9),
+    0 0 0 1px rgba(255, 255, 255, 0.06),
+    inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(20px);
   overflow: hidden;
 }
 

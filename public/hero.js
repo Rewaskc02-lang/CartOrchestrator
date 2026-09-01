@@ -1,6 +1,6 @@
 /**
  * ============================================================================
- * Cinematic Flow-Field Particle Current & Parallax Tilt Engine
+ * Flow-Field Particle Current & Parallax Tilt Engine
  * ============================================================================
  */
 
@@ -11,23 +11,24 @@
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // DOM Elements
-  const heroSection = document.getElementById('hero-section');
   const deviceFrame = document.getElementById('hero-device-frame');
   const pipWindow = document.getElementById('hero-pip-window');
+  const chatSection = document.getElementById('chat-app');
   const canvas = document.getElementById('flow-canvas');
 
-  if (!canvas || !deviceFrame) return;
+  if (!canvas) return;
 
   const ctx = canvas.getContext('2d');
   let canvasWidth = 0;
   let canvasHeight = 0;
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
-  // Resize canvas to match frame
+  // Resize canvas to cover the chat concierge section
   const resizeCanvas = () => {
-    const rect = deviceFrame.getBoundingClientRect();
-    canvasWidth = rect.width;
-    canvasHeight = rect.height;
+    const targetElem = chatSection || document.body;
+    const rect = targetElem.getBoundingClientRect();
+    canvasWidth = rect.width || window.innerWidth;
+    canvasHeight = rect.height || window.innerHeight;
     canvas.width = Math.floor(canvasWidth * dpr);
     canvas.height = Math.floor(canvasHeight * dpr);
     if (ctx) ctx.scale(dpr, dpr);
@@ -38,23 +39,22 @@
   // ==========================================
   // 1. Flow-Field Particle Simulation Engine
   // ==========================================
-  const NUM_PARTICLES = 220;
+  const NUM_PARTICLES = 240;
   const particles = [];
 
   // Mouse interaction state
   const mouse = {
     x: -9999,
     y: -9999,
-    radius: 90,
+    radius: 110,
   };
 
-  // Lightweight inline 2D Noise / Vector Field Generator
+  // Multi-scale harmonic curl noise flow field
   const getFlowAngle = (x, y, t) => {
-    // Multi-scale harmonic curl field
-    const scale1 = 0.0035;
-    const scale2 = 0.007;
-    const a1 = Math.sin(x * scale1 + t * 0.4) * Math.cos(y * scale1 + t * 0.3) * Math.PI * 2;
-    const a2 = Math.sin(y * scale2 - t * 0.2) * Math.cos(x * scale2 + t * 0.5) * Math.PI;
+    const scale1 = 0.003;
+    const scale2 = 0.006;
+    const a1 = Math.sin(x * scale1 + t * 0.35) * Math.cos(y * scale1 + t * 0.25) * Math.PI * 2;
+    const a2 = Math.sin(y * scale2 - t * 0.15) * Math.cos(x * scale2 + t * 0.4) * Math.PI;
     return a1 + a2 * 0.5;
   };
 
@@ -64,18 +64,18 @@
     }
 
     reset(initial = false) {
-      this.x = Math.random() * (canvasWidth || 800);
-      this.y = Math.random() * (canvasHeight || 500);
+      this.x = Math.random() * (canvasWidth || window.innerWidth);
+      this.y = Math.random() * (canvasHeight || 800);
       this.prevX = this.x;
       this.prevY = this.y;
-      this.speed = 1.2 + Math.random() * 1.6;
-      this.radius = 0.8 + Math.random() * 1.4;
-      this.baseAlpha = 0.25 + Math.random() * 0.55;
+      this.speed = 1.1 + Math.random() * 1.5;
+      this.radius = 0.8 + Math.random() * 1.3;
+      this.baseAlpha = 0.25 + Math.random() * 0.5;
       this.alpha = this.baseAlpha;
-      this.life = initial ? Math.random() * 300 : 0;
-      this.maxLife = 200 + Math.random() * 250;
-      // Tone: cyan to cobalt blue
-      this.hue = Math.random() > 0.4 ? 198 : 218; // 198 = cyan (#38bdf8), 218 = blue (#2563eb)
+      this.life = initial ? Math.random() * 320 : 0;
+      this.maxLife = 220 + Math.random() * 260;
+      // Tone: cyan to electric blue
+      this.hue = Math.random() > 0.35 ? 198 : 218; // 198 = cyan (#38bdf8), 218 = blue (#2563eb)
     }
 
     update(time) {
@@ -90,10 +90,10 @@
       const dist = Math.hypot(dx, dy);
 
       if (dist < mouse.radius && dist > 1) {
-        const force = (1 - dist / mouse.radius) * 2.2;
+        const force = (1 - dist / mouse.radius) * 2.4;
         const pushAngle = Math.atan2(dy, dx);
-        this.x += Math.cos(pushAngle) * force * 3;
-        this.y += Math.sin(pushAngle) * force * 3;
+        this.x += Math.cos(pushAngle) * force * 3.5;
+        this.y += Math.sin(pushAngle) * force * 3.5;
       }
 
       this.x += Math.cos(angle) * this.speed;
@@ -101,7 +101,7 @@
 
       this.life++;
 
-      // Fade in and out over lifetime
+      // Smooth fade in & out
       const lifeRatio = this.life / this.maxLife;
       if (lifeRatio < 0.15) {
         this.alpha = this.baseAlpha * (lifeRatio / 0.15);
@@ -109,7 +109,7 @@
         this.alpha = this.baseAlpha * (1 - (lifeRatio - 0.8) / 0.2);
       }
 
-      // Wrap around bounds or reset on end of life
+      // Wrap around bounds or reset
       if (
         this.life > this.maxLife ||
         this.x < -20 ||
@@ -125,61 +125,70 @@
       ctx.beginPath();
       ctx.moveTo(this.prevX, this.prevY);
       ctx.lineTo(this.x, this.y);
-      ctx.strokeStyle = `hsla(${this.hue}, 90%, 65%, ${this.alpha.toFixed(3)})`;
+      ctx.strokeStyle = `hsla(${this.hue}, 92%, 65%, ${this.alpha.toFixed(3)})`;
       ctx.lineWidth = this.radius;
       ctx.lineCap = 'round';
       ctx.stroke();
     }
   }
 
-  // Initialize particles
+  // Initialize particle pool
   for (let i = 0; i < NUM_PARTICLES; i++) {
     particles.push(new FlowParticle());
   }
 
   // ==========================================
-  // 2. Parallax 3D Tilt on Floating Window
+  // 2. Mouse Tracking & Deflection Physics
+  // ==========================================
+  const handleChatPointerMove = (e) => {
+    if (!chatSection) return;
+    const rect = chatSection.getBoundingClientRect();
+    mouse.x = e.clientX - rect.left;
+    mouse.y = e.clientY - rect.top;
+  };
+
+  const handleChatPointerLeave = () => {
+    mouse.x = -9999;
+    mouse.y = -9999;
+  };
+
+  if (chatSection) {
+    chatSection.addEventListener('mousemove', handleChatPointerMove, { passive: true });
+    chatSection.addEventListener('mouseleave', handleChatPointerLeave);
+  }
+
+  // ==========================================
+  // 3. Parallax 3D Tilt on Floating Mockup Window
   // ==========================================
   const tilt = {
     targetX: 0,
     targetY: 0,
     currentX: 0,
     currentY: 0,
-    maxAngle: 5.5, // Subtle 4-6 degrees
-    lerp: 0.08,    // Damped inertia
+    maxAngle: 5.0, // 4-6 degrees
+    lerp: 0.08,
   };
 
-  const handlePointerMove = (e) => {
-    const frameRect = deviceFrame.getBoundingClientRect();
-    const clientX = e.clientX;
-    const clientY = e.clientY;
+  if (deviceFrame) {
+    deviceFrame.addEventListener('mousemove', (e) => {
+      const frameRect = deviceFrame.getBoundingClientRect();
+      const centerX = frameRect.left + frameRect.width / 2;
+      const centerY = frameRect.top + frameRect.height / 2;
+      const normX = Math.max(-1, Math.min(1, (e.clientX - centerX) / (frameRect.width / 2)));
+      const normY = Math.max(-1, Math.min(1, (e.clientY - centerY) / (frameRect.height / 2)));
 
-    // Track mouse position relative to canvas
-    mouse.x = clientX - frameRect.left;
-    mouse.y = clientY - frameRect.top;
+      tilt.targetY = normX * tilt.maxAngle;
+      tilt.targetX = -normY * tilt.maxAngle;
+    }, { passive: true });
 
-    // Compute normalized coordinates [-1, 1] for 3D tilt
-    const centerX = frameRect.left + frameRect.width / 2;
-    const centerY = frameRect.top + frameRect.height / 2;
-    const normX = Math.max(-1, Math.min(1, (clientX - centerX) / (frameRect.width / 2)));
-    const normY = Math.max(-1, Math.min(1, (clientY - centerY) / (frameRect.height / 2)));
-
-    tilt.targetY = normX * tilt.maxAngle;
-    tilt.targetX = -normY * tilt.maxAngle;
-  };
-
-  const handlePointerLeave = () => {
-    mouse.x = -9999;
-    mouse.y = -9999;
-    tilt.targetX = 0;
-    tilt.targetY = 0;
-  };
-
-  deviceFrame.addEventListener('mousemove', handlePointerMove, { passive: true });
-  deviceFrame.addEventListener('mouseleave', handlePointerLeave);
+    deviceFrame.addEventListener('mouseleave', () => {
+      tilt.targetX = 0;
+      tilt.targetY = 0;
+    });
+  }
 
   // ==========================================
-  // 3. Animation Loop & Visibility Lifecycle
+  // 4. Main Render Loop & Lifecycle
   // ==========================================
   let isRunning = true;
   let animTime = 0;
@@ -199,7 +208,6 @@
     if (!isRunning) return;
 
     if (prefersReducedMotion) {
-      // Draw single clean static background and stop
       ctx.fillStyle = '#070a13';
       ctx.fillRect(0, 0, canvasWidth, canvasHeight);
       particles.forEach((p) => p.draw());
@@ -208,18 +216,18 @@
 
     animTime += 0.008;
 
-    // A. Soft fading trails (motion blur via low-alpha repaint)
+    // Fading motion blur trails via low-alpha canvas repaint
     ctx.fillStyle = 'rgba(7, 10, 19, 0.14)';
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
-    // B. Update and render particle flow
+    // Update and draw particle currents
     for (let i = 0; i < particles.length; i++) {
       const p = particles[i];
       p.update(animTime);
       p.draw();
     }
 
-    // C. Damped 3D Parallax Tilt on Picture-in-Picture window
+    // Parallax 3D Tilt on Picture-in-Picture window
     if (pipWindow) {
       tilt.currentX += (tilt.targetX - tilt.currentX) * tilt.lerp;
       tilt.currentY += (tilt.targetY - tilt.currentY) * tilt.lerp;
@@ -232,6 +240,5 @@
     requestAnimationFrame(renderLoop);
   };
 
-  // Start Animation
   requestAnimationFrame(renderLoop);
 })();
