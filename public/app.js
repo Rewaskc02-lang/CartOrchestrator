@@ -28,6 +28,9 @@ const resetSession = () => {
   localStorage.removeItem('ai_agent_session_id');
   const newSid = getSessionId();
   updateSessionBadge();
+  if (wsClient && wsClient.readyState === WebSocket.OPEN) {
+    wsClient.send(JSON.stringify({ type: 'set_session', sessionId: newSid }));
+  }
   const chatMessages = document.getElementById('chat-messages');
   if (chatMessages) {
     chatMessages.innerHTML = `
@@ -36,7 +39,7 @@ const resetSession = () => {
           <p>Fresh conversation started! How can I help you find the right shoes or apparel today?</p>
           <div class="quick-prompts">
             <button class="chip" data-prompt="Show me running shoes under $180">Running shoes under $180</button>
-            <button class="chip" data-prompt="What lifestyle sneakers do you have?">Lifestyle sneakers</button>
+            <button class="chip" data-prompt="I want to buy AeroGlide with coupon WELCOME10">Buy AeroGlide with 10% coupon</button>
             <button class="chip" data-prompt="What promo coupons are available?">Available coupons</button>
           </div>
         </div>
@@ -303,8 +306,65 @@ const openRazorpayCheckout = async (orderId, paymentLink) => {
 };
 
 // ==========================================
-// 4. Chat Form Submission & API Call
+// 4. Global Real-time WebSocket Client
 // ==========================================
+
+let wsClient = null;
+let wsReconnectTimer = null;
+
+const initWebSocket = () => {
+  const sid = getSessionId();
+  const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+  const wsUrl = `${protocol}//${window.location.host}/ws?sessionId=${encodeURIComponent(sid)}`;
+
+  try {
+    wsClient = new WebSocket(wsUrl);
+
+    wsClient.onopen = () => {
+      console.log('[WebSocket] Connected to global real-time agent socket.');
+      if (wsReconnectTimer) {
+        clearTimeout(wsReconnectTimer);
+        wsReconnectTimer = null;
+      }
+    };
+
+    wsClient.onmessage = (event) => {
+      try {
+        const payload = JSON.parse(event.data);
+
+        if (payload.type === 'tool_executing') {
+          const typingText = document.querySelector('.typing-text');
+          if (typingText && payload.message) {
+            typingText.textContent = payload.message;
+          }
+        } else if (payload.type === 'chat_response') {
+          setInputState(false);
+          const typingText = document.querySelector('.typing-text');
+          if (typingText) typingText.textContent = 'Agent is thinking...';
+          appendAssistantMessage(payload.reply, payload.data || {});
+        } else if (payload.type === 'error') {
+          setInputState(false);
+          appendErrorBubble(payload.message || 'An error occurred.');
+        }
+      } catch (err) {
+        console.warn('[WS Message Parse Error]', err);
+      }
+    };
+
+    wsClient.onclose = () => {
+      console.log('[WebSocket] Connection closed. Attempting reconnect in 2s...');
+      if (!wsReconnectTimer) {
+        wsReconnectTimer = setTimeout(initWebSocket, 2000);
+      }
+    };
+
+    wsClient.onerror = (err) => {
+      console.warn('[WebSocket Error]', err);
+    };
+  } catch (e) {
+    console.warn('[WebSocket Init Error]', e);
+  }
+};
 
 const sendMessage = async (userMessage) => {
   if (!userMessage || !userMessage.trim()) return;
@@ -315,6 +375,19 @@ const sendMessage = async (userMessage) => {
 
   const sessionId = getSessionId();
 
+  // 1. If WebSocket is active, send via fast WebSocket
+  if (wsClient && wsClient.readyState === WebSocket.OPEN) {
+    wsClient.send(
+      JSON.stringify({
+        type: 'chat_message',
+        sessionId,
+        message: text,
+      })
+    );
+    return;
+  }
+
+  // 2. HTTP Fallback if WebSocket is connecting or offline
   try {
     const response = await fetch('/api/chat', {
       method: 'POST',
@@ -349,6 +422,7 @@ const sendMessage = async (userMessage) => {
 
 document.addEventListener('DOMContentLoaded', () => {
   updateSessionBadge();
+  initWebSocket();
 
   const chatForm = document.getElementById('chat-form');
   const messageInput = document.getElementById('message-input');

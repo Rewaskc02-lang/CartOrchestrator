@@ -10,7 +10,7 @@ import {
  * Robust Gemini model invoker with retry backoff
  */
 const callGeminiWithRetry = async (geminiContents, retries = 3) => {
-  const candidateModels = ['gemini-3.7-flash', 'gemini-3.5-flash'];
+  const candidateModels = ['gemini-3.5-flash', 'gemini-3.7-flash'];
 
   let lastError = null;
 
@@ -33,7 +33,7 @@ const callGeminiWithRetry = async (geminiContents, retries = 3) => {
       console.warn(`[Gemini Attempt ${attempt + 1}/${retries} Failed with model ${modelToUse}]:`, err.message);
 
       if (attempt < retries - 1) {
-        await new Promise((resolve) => setTimeout(resolve, 2000 * (attempt + 1)));
+        await new Promise((resolve) => setTimeout(resolve, 800 * (attempt + 1)));
       }
     }
   }
