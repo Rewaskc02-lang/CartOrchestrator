@@ -1,6 +1,6 @@
 /**
  * ============================================================================
- * Cinematic Hero Engine - "Physical Product Under Glass" Motion Physics
+ * Cinematic Hero Engine - "Physical Product Under Glass" & Dynamic Showcase
  * ============================================================================
  */
 
@@ -19,10 +19,133 @@
   const reflectionWrapper = document.getElementById('hero-reflection');
   const canvas = document.getElementById('ripple-canvas');
 
+  // Dynamic Product HUD Elements
+  const hudName = document.getElementById('hero-hud-name');
+  const hudPrice = document.getElementById('hero-hud-price');
+  const hudCategory = document.getElementById('hero-hud-category');
+  const hudStock = document.getElementById('hero-hud-stock');
+  const hudDotsContainer = document.getElementById('hero-showcase-dots');
+  const hudCard = document.getElementById('hero-hud-card');
+
   if (!heroSection || !card3D || !sheenLayer) return;
 
   // ==========================================
-  // 1. Physics State & Inertial Tilt Variables
+  // 1. Dynamic Catalog Variety Carousel (A1)
+  // ==========================================
+  let featuredProducts = [];
+  let currentProductIndex = 0;
+  let carouselInterval = null;
+  const CAROUSEL_INTERVAL_MS = 3800;
+
+  const renderProductInfo = (index) => {
+    if (!featuredProducts || featuredProducts.length === 0) return;
+    const prod = featuredProducts[index];
+    if (!prod) return;
+
+    if (hudName) hudName.textContent = prod.name;
+    if (hudPrice) hudPrice.textContent = `$${Number(prod.price).toFixed(2)}`;
+    if (hudCategory) hudCategory.textContent = prod.category || 'Footwear';
+    if (hudStock) {
+      hudStock.textContent = prod.stock > 0 ? `In Stock (${prod.stock})` : 'Limited';
+    }
+
+    // Update active dot indicator
+    if (hudDotsContainer) {
+      const dots = hudDotsContainer.querySelectorAll('.hero-dot');
+      dots.forEach((dot, idx) => {
+        if (idx === index) {
+          dot.classList.add('active');
+        } else {
+          dot.classList.remove('active');
+        }
+      });
+    }
+
+    // Trigger subtle HUD pulse animation
+    if (hudCard) {
+      hudCard.classList.remove('pulse');
+      void hudCard.offsetWidth; // Trigger reflow
+      hudCard.classList.add('pulse');
+    }
+  };
+
+  const nextProduct = () => {
+    if (featuredProducts.length <= 1) return;
+    currentProductIndex = (currentProductIndex + 1) % featuredProducts.length;
+    renderProductInfo(currentProductIndex);
+  };
+
+  const startCarousel = () => {
+    if (carouselInterval) clearInterval(carouselInterval);
+    if (!prefersReducedMotion) {
+      carouselInterval = setInterval(nextProduct, CAROUSEL_INTERVAL_MS);
+    }
+  };
+
+  const pauseCarousel = () => {
+    if (carouselInterval) {
+      clearInterval(carouselInterval);
+      carouselInterval = null;
+    }
+  };
+
+  const initFeaturedProducts = async () => {
+    try {
+      const res = await fetch('/api/products/featured');
+      const data = await res.json();
+      if (data.success && Array.isArray(data.products) && data.products.length > 0) {
+        featuredProducts = data.products;
+
+        // Render dot navigation
+        if (hudDotsContainer) {
+          hudDotsContainer.innerHTML = '';
+          featuredProducts.forEach((p, idx) => {
+            const dot = document.createElement('button');
+            dot.className = `hero-dot ${idx === 0 ? 'active' : ''}`;
+            dot.setAttribute('aria-label', `View ${p.name}`);
+            dot.title = `${p.name} ($${p.price})`;
+            dot.addEventListener('click', (e) => {
+              e.stopPropagation();
+              currentProductIndex = idx;
+              renderProductInfo(currentProductIndex);
+              startCarousel(); // reset timer
+            });
+            hudDotsContainer.appendChild(dot);
+          });
+        }
+
+        renderProductInfo(0);
+        startCarousel();
+      }
+    } catch (err) {
+      console.warn('Could not load featured products for hero showcase:', err);
+    }
+  };
+
+  // Pause carousel on hover, resume on mouseout
+  stageContainer.addEventListener('mouseenter', pauseCarousel);
+  stageContainer.addEventListener('mouseleave', startCarousel);
+
+  // Click on HUD card sends quick prompt to chat
+  if (hudCard) {
+    hudCard.addEventListener('click', (e) => {
+      const prod = featuredProducts[currentProductIndex];
+      if (prod) {
+        const input = document.getElementById('message-input');
+        const chatApp = document.getElementById('chat-app');
+        if (chatApp) chatApp.scrollIntoView({ behavior: 'smooth' });
+        if (input) {
+          input.value = `Tell me more about the "${prod.name}" and check current deals.`;
+          input.focus();
+        }
+      }
+    });
+  }
+
+  initFeaturedProducts();
+
+  // ==========================================
+  // 2. Physics State & Inertial Tilt Variables
   // ==========================================
   const physics = {
     targetRotateX: 0,
@@ -37,7 +160,7 @@
   };
 
   // ==========================================
-  // 2. Liquid Ripple Ground Plane Engine (Canvas 2D)
+  // 3. Liquid Ripple Ground Plane Engine (Canvas 2D)
   // ==========================================
   let ctx = null;
   let canvasWidth = 0;
@@ -77,7 +200,7 @@
   };
 
   // ==========================================
-  // 3. Mouse Event Handling (rAF Throttled)
+  // 4. Mouse Event Handling (rAF Throttled)
   // ==========================================
   let mouseMovePending = false;
   let lastMouseEvent = null;
@@ -136,7 +259,6 @@
 
   const handlePointerLeave = () => {
     physics.isHovered = false;
-    // Decelerate back to rest position
     physics.targetRotateX = 0;
     physics.targetRotateY = 0;
   };
@@ -159,7 +281,7 @@
   }
 
   // ==========================================
-  // 4. Main Animation & Render Loop (rAF)
+  // 5. Main Animation & Render Loop (rAF)
   // ==========================================
   let animationTime = 0;
   let ambientRippleTimer = 0;

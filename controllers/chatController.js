@@ -154,7 +154,11 @@ export const handleChat = async (req, res) => {
 
           // Collect structured data
           if (name === 'searchProducts' && Array.isArray(toolResult.products)) {
-            turnData.products.push(...toolResult.products);
+            for (const prod of toolResult.products) {
+              if (!turnData.products.some((p) => (p.productId || p.id) === (prod.productId || prod.id))) {
+                turnData.products.push(prod);
+              }
+            }
           } else if (name === 'generatePaymentLink' && toolResult.paymentLink) {
             turnData.paymentLink = toolResult.paymentLink;
             turnData.orderId = toolResult.orderId;

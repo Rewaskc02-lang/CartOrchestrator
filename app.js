@@ -9,6 +9,7 @@ import webhookRoutes from './routes/webhook.js';
 import chatRoutes from './routes/chat.js';
 import configRoutes from './routes/config.js';
 import adminRoutes from './routes/admin.js';
+import productRoutes from './routes/productRoutes.js';
 
 dotenv.config();
 
@@ -19,6 +20,31 @@ const app = express();
 
 // Middleware
 app.use(cors());
+
+// Request logging middleware for debugging
+app.use((req, res, next) => {
+  const startTime = Date.now();
+  const originalSend = res.send;
+
+  res.send = function (data) {
+    const duration = Date.now() - startTime;
+    const method = req.method;
+    const route = req.originalUrl;
+    const status = res.statusCode;
+    const timestamp = new Date().toISOString();
+
+    // Only log API and webhook routes, not static assets
+    if (route.startsWith('/api/') || route.startsWith('/webhook') || route.startsWith('/admin')) {
+      console.log(
+        `[${timestamp}] ${method} ${route} | Status: ${status} | Duration: ${duration}ms`
+      );
+    }
+
+    return originalSend.call(this, data);
+  };
+
+  next();
+});
 
 // Parse JSON while preserving raw body buffer for HMAC webhook signature verification
 app.use(
@@ -42,6 +68,7 @@ app.use('/webhook', webhookRoutes);
 app.use('/api/webhook', webhookRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/config', configRoutes);
+app.use('/api/products', productRoutes);
 app.use('/admin', adminRoutes);
 
 // 404 Catch-all handler for API routes
