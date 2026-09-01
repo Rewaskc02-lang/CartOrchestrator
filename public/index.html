@@ -3,67 +3,147 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Shopping Agent</title>
+  <title>AeroGlide &bull; AI Shopping Agent</title>
+  <link rel="stylesheet" href="/hero.css" />
   <link rel="stylesheet" href="/style.css" />
   <!-- Razorpay Checkout JS SDK -->
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
 <body>
-  <div class="chat-wrapper">
-    <!-- Header -->
-    <header class="chat-header">
-      <div class="header-info">
-        <h1>AI Shopping Agent</h1>
-        <span class="status-indicator">Online</span>
+  <!-- ==========================================
+       CINEMATIC HERO SECTION ("Product Under Glass")
+       ========================================== -->
+  <section id="hero-section" class="hero-section">
+    <!-- Tactile Overlays: SVG Noise Grain & Radial Vignette -->
+    <div class="hero-grain"></div>
+    <div class="hero-vignette"></div>
+
+    <!-- Ambient Breathing Glow -->
+    <div id="hero-glow" class="hero-ambient-glow"></div>
+
+    <!-- Header & Headline -->
+    <div class="hero-header-content">
+      <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        <span>AeroGlide Performance Series &bull; AI Commerce Engine</span>
       </div>
-      <div class="header-actions">
-        <span id="session-badge" class="session-badge" title="Active Session ID">Session: ...</span>
-        <button id="reset-session-btn" class="btn-secondary" title="Start a fresh conversation">New Chat</button>
-        <a href="/admin/orders" target="_blank" class="btn-secondary" style="text-decoration:none; display:inline-flex; align-items:center; gap:4px;" title="View read-only audit log registry">
-          📋 Audit Trail
+      <h1 class="hero-title">
+        Engineered for Speed.<br />
+        <span>Gated by Autonomous AI.</span>
+      </h1>
+      <p class="hero-subtitle">
+        Explore high-performance marathon gear with zero-trust server validation, explainable coupon intelligence, and verified Razorpay checkouts.
+      </p>
+      <div class="hero-cta-group">
+        <a href="#chat-app" class="hero-btn-primary">
+          <span>Launch AI Assistant &darr;</span>
         </a>
-      </div>
-    </header>
-
-    <!-- Messages Feed -->
-    <main id="chat-messages" class="chat-messages">
-      <div class="message-row assistant">
-        <div class="message-bubble">
-          <p>Hello! I'm your AI Shopping Agent. How can I help you today?</p>
-          <div class="quick-prompts">
-            <button class="chip" data-prompt="Show me running shoes under $180">Running shoes under $180</button>
-            <button class="chip" data-prompt="I want to buy AeroGlide with coupon EXPIRED50">Test expired coupon demo</button>
-            <button class="chip" data-prompt="What promo coupons are available?">Available coupons</button>
-          </div>
-        </div>
-      </div>
-    </main>
-
-    <!-- Typing Indicator -->
-    <div id="typing-indicator" class="typing-indicator hidden">
-      <div class="typing-bubble">
-        <span></span><span></span><span></span>
-        <span class="typing-text">Agent is thinking...</span>
+        <a href="/admin/orders" target="_blank" class="hero-btn-glass">
+          <span>📋 View Audit Registry</span>
+        </a>
       </div>
     </div>
 
-    <!-- Input Bar -->
-    <footer class="chat-input-bar">
-      <form id="chat-form" class="chat-form">
-        <input
-          type="text"
-          id="message-input"
-          placeholder="Ask for shoes, apply coupon (e.g. WELCOME10, EXPIRED50), or checkout..."
-          autocomplete="off"
-          required
-        />
-        <button type="submit" id="send-btn" class="btn-primary">
-          <span>Send</span>
-        </button>
-      </form>
-    </footer>
-  </div>
+    <!-- 3D Stage & Floating Object under Glass -->
+    <div id="hero-stage" class="hero-stage-container">
+      <div id="hero-3d-card" class="hero-3d-card">
+        <div class="hero-object-glass">
+          <div class="hero-glass-highlight-top"></div>
+          <img
+            src="/assets/aeroglide_hero.jpg"
+            alt="AeroGlide Ultra Marathon Running Shoe"
+            class="hero-product-img"
+          />
+          <!-- Specular Sheen Sweep Tracking Tilt Angle -->
+          <div id="hero-sheen" class="hero-sheen-layer"></div>
 
+          <!-- Product HUD Tag -->
+          <div class="hero-hud-tag">
+            <span class="hero-hud-name">AeroGlide Ultra Marathon</span>
+            <span class="hero-hud-price">$189.99</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reactive Liquid Ground Plane (Canvas 2D Ripples) -->
+      <div class="hero-ground-plane">
+        <canvas id="ripple-canvas"></canvas>
+      </div>
+
+      <!-- Mirrored Blurred Reflection -->
+      <div id="hero-reflection" class="hero-reflection-wrapper">
+        <img
+          src="/assets/aeroglide_hero.jpg"
+          alt="AeroGlide Reflection"
+          class="hero-reflection-img"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       INTERACTIVE CHAT INTERFACE
+       ========================================== -->
+  <section id="chat-app" class="chat-section-container">
+    <div class="chat-wrapper">
+      <!-- Header -->
+      <header class="chat-header">
+        <div class="header-info">
+          <h2>AI Shopping Concierge</h2>
+          <span class="status-indicator">Online</span>
+        </div>
+        <div class="header-actions">
+          <span id="session-badge" class="session-badge" title="Active Session ID">Session: ...</span>
+          <button id="reset-session-btn" class="btn-secondary" title="Start a fresh conversation">New Chat</button>
+          <a href="/admin/orders" target="_blank" class="btn-secondary" style="text-decoration:none; display:inline-flex; align-items:center; gap:4px;" title="View read-only audit log registry">
+            📋 Audit Trail
+          </a>
+        </div>
+      </header>
+
+      <!-- Messages Feed -->
+      <main id="chat-messages" class="chat-messages">
+        <div class="message-row assistant">
+          <div class="message-bubble">
+            <p>Hello! I'm your AI Shopping Agent. How can I help you find the right shoes or apparel today?</p>
+            <div class="quick-prompts">
+              <button class="chip" data-prompt="Show me running shoes under $180">Running shoes under $180</button>
+              <button class="chip" data-prompt="I want to buy AeroGlide with coupon WELCOME10">Buy AeroGlide with 10% coupon</button>
+              <button class="chip" data-prompt="I want to buy AeroGlide with coupon EXPIRED50">Test expired coupon guardrail</button>
+              <button class="chip" data-prompt="What promo coupons are available?">Available coupons</button>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Typing Indicator -->
+      <div id="typing-indicator" class="typing-indicator hidden">
+        <div class="typing-bubble">
+          <span></span><span></span><span></span>
+          <span class="typing-text">Agent is thinking...</span>
+        </div>
+      </div>
+
+      <!-- Input Bar -->
+      <footer class="chat-input-bar">
+        <form id="chat-form" class="chat-form">
+          <input
+            type="text"
+            id="message-input"
+            placeholder="Ask for shoes, apply coupon (e.g. WELCOME10, SPRINT20), or checkout..."
+            autocomplete="off"
+            required
+          />
+          <button type="submit" id="send-btn" class="btn-primary">
+            <span>Send</span>
+          </button>
+        </form>
+      </footer>
+    </div>
+  </section>
+
+  <!-- Script Modules -->
+  <script src="/hero.js"></script>
   <script src="/app.js"></script>
 </body>
 </html>
