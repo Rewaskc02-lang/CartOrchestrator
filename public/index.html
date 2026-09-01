@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Shopping Agent</title>
+  <link rel="stylesheet" href="/style.css" />
+  <!-- Razorpay Checkout JS SDK -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+  <div class="chat-wrapper">
+    <!-- Header -->
+    <header class="chat-header">
+      <div class="header-info">
+        <h1>AI Shopping Agent</h1>
+        <span class="status-indicator">Online</span>
+      </div>
+      <div class="header-actions">
+        <span id="session-badge" class="session-badge" title="Active Session ID">Session: ...</span>
+        <button id="reset-session-btn" class="btn-secondary" title="Start a fresh conversation">New Chat</button>
+        <a href="/admin/orders" target="_blank" class="btn-secondary" style="text-decoration:none; display:inline-flex; align-items:center; gap:4px;" title="View read-only audit log registry">
+          📋 Audit Trail
+        </a>
+      </div>
+    </header>
+
+    <!-- Messages Feed -->
+    <main id="chat-messages" class="chat-messages">
+      <div class="message-row assistant">
+        <div class="message-bubble">
+          <p>Hello! I'm your AI Shopping Agent. How can I help you today?</p>
+          <div class="quick-prompts">
+            <button class="chip" data-prompt="Show me running shoes under $180">Running shoes under $180</button>
+            <button class="chip" data-prompt="I want to buy AeroGlide with coupon EXPIRED50">Test expired coupon demo</button>
+            <button class="chip" data-prompt="What promo coupons are available?">Available coupons</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Typing Indicator -->
+    <div id="typing-indicator" class="typing-indicator hidden">
+      <div class="typing-bubble">
+        <span></span><span></span><span></span>
+        <span class="typing-text">Agent is thinking...</span>
+      </div>
+    </div>
+
+    <!-- Input Bar -->
+    <footer class="chat-input-bar">
+      <form id="chat-form" class="chat-form">
+        <input
+          type="text"
+          id="message-input"
+          placeholder="Ask for shoes, apply coupon (e.g. WELCOME10, EXPIRED50), or checkout..."
+          autocomplete="off"
+          required
+        />
+        <button type="submit" id="send-btn" class="btn-primary">
+          <span>Send</span>
+        </button>
+      </form>
+    </footer>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
