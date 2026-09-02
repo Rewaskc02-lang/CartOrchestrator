@@ -111,3 +111,33 @@ Simulate an incoming Razorpay `payment.captured` event locally:
 ```bash
 node test-local-webhook.js
 ```
+
+---
+
+## 4. Demo Management
+
+### Reset Demo to Clean State
+Between demo runs, reset all transactional data (orders, conversations, carts) while re-seeding fresh Products and Coupons:
+```bash
+npm run reset-demo
+```
+
+---
+
+## 5. Enhanced Features (Post-Testing)
+
+### ✨ New Features Added
+- **Request Logging Middleware**: All API requests logged with method, route, status, and duration for real-time debugging during demo
+- **Rate Limiting on `/api/chat`**: Per-session (10 req/min) and global (100 req/min) limits prevent runaway LLM costs
+- **Order History Tool**: Users can ask "What did I order?" — new 5th AI tool `getOrderHistory` retrieves all past orders
+- **Demo Reset Script**: `npm run reset-demo` clears transactional data and re-seeds Products/Coupons in 10 seconds
+
+### 🔒 Security Audit Results
+- ✅ Webhook HMAC-SHA256 signature verification rejects tampered payloads (tested with invalid signatures)
+- ✅ Input validation on all endpoints (missing sessionId, empty message, invalid items, non-existent coupons)
+- ✅ API keys read from environment only (never hardcoded or logged)
+- ✅ Stock decrement is idempotent (webhook retries won't double-decrement)
+- ✅ Coupon usage counts increment only on confirmed payment (not on link generation)
+
+### 📋 Test Report
+See [TEST_REPORT.md](./TEST_REPORT.md) for comprehensive testing results, security audit, and verification of all guardrails.

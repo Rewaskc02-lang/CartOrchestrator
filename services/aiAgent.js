@@ -3,6 +3,7 @@ import { Type } from '@google/genai';
 import Product from '../models/Product.js';
 import Coupon from '../models/Coupon.js';
 import Cart from '../models/Cart.js';
+import Order from '../models/Order.js';
 import { processCreateOrder } from '../controllers/orderController.js';
 
 // ==========================================
@@ -331,6 +332,77 @@ export const addToCartTool = async ({ sessionId, productId, qty = 1 }) => {
   }
 };
 
+/**
+ * 5. getOrderHistory tool
+ * Returns all orders for a given session, with summary details.
+ * Allows customer to ask "what did I order" or "show my past orders".
+ */
+export const getOrderHistoryTool = async ({ sessionId }) => {
+  try {
+    if (!sessionId || typeof sessionId !== 'string' || !sessionId.trim()) {
+      return {
+        success: false,
+        reason: 'Session ID is required.',
+        orders: [],
+      };
+    }
+
+    const cleanSessionId = sessionId.trim();
+    const orders = await Order.find({ sessionId: cleanSessionId })
+      .sort({ createdAt: -1 })
+      .select('_id items couponApplied subtotal discount total status createdAt updatedAt razorpayOrderId')
+      .lean();
+
+    if (!orders || orders.length === 0) {
+      return {
+        success: true,
+        reason: 'You have no order history yet.',
+        orderCount: 0,
+        orders: [],
+      };
+    }
+
+    const formattedOrders = orders.map((order) => ({
+      orderId: order._id.toString(),
+      status: order.status,
+      itemCount: order.items.length,
+      items: order.items.map((item) => ({
+        productId: item.productId.toString(),
+        qty: item.qty,
+        price: item.price,
+        subtotal: Number((item.qty * item.price).toFixed(2)),
+      })),
+      subtotal: order.subtotal,
+      discount: order.discount,
+      total: order.total,
+      couponApplied: order.couponApplied || 'None',
+      createdAt: order.createdAt.toISOString(),
+      updatedAt: order.updatedAt.toISOString(),
+    }));
+
+    const orderSummary = formattedOrders
+      .map(
+        (o) =>
+          `Order #${o.orderId.slice(-6)} (${o.status.toUpperCase()}): ${o.itemCount} item(s), Total: $${o.total} (${new Date(o.createdAt).toLocaleDateString()})`
+      )
+      .join('\n');
+
+    return {
+      success: true,
+      orderCount: orders.length,
+      orders: formattedOrders,
+      summary: `You have ${orders.length} order(s):\n${orderSummary}`,
+    };
+  } catch (error) {
+    console.error('[Tool: getOrderHistory Error]', error);
+    return {
+      success: false,
+      reason: error.message || 'Failed to retrieve order history',
+      orders: [],
+    };
+  }
+};
+
 // ==========================================
 // Gemini Tool Declarations
 // ==========================================
@@ -421,6 +493,15 @@ export const functionDeclarations = [
       },
     },
   },
+  {
+    name: 'getOrderHistory',
+    description: 'Retrieves all past orders for the user session. Use this when a customer asks about their order history, past purchases, or what they have ordered.',
+    parameters: {
+      type: Type.OBJECT,
+      properties: {},
+      required: [],
+    },
+  },
 ];
 
 export const geminiTools = [
@@ -431,12 +512,13 @@ export const geminiTools = [
 
 // System instruction for the AI shopping assistant
 export const SYSTEM_INSTRUCTION = `You are the AI Shopping Agent for a premium footwear and athletic apparel brand.
-Your job is to assist customers with discovering products, checking stock, answering questions, managing their cart, applying valid promo coupons, and completing orders.
+Your job is to assist customers with discovering products, checking stock, answering questions, managing their cart, applying valid promo coupons, viewing their order history, and completing orders.
 
 CRITICAL RULES YOU MUST STRICTLY FOLLOW:
 1. NEVER ask the customer for their session ID or technical credentials. The session is managed automatically by the backend.
 2. NEVER hallucinate or invent products, prices, stock levels, or discounts.
 3. ALWAYS use the searchProducts tool to look up catalog inventory before suggesting products or completing orders. If a requested product is not found in search results or is out of stock, explicitly inform the customer that it is unavailable and suggest matching in-stock items from the catalog.
+4. When a customer asks about their order history, past purchases, or what they've ordered, use the getOrderHistory tool to retrieve and display their orders.
 4. NEVER compute money math or calculate final discounts yourself. Always rely on the tool outputs (applyCoupon, generatePaymentLink) as the single source of truth.
 5. When a user wants to purchase or checkout:
    - If you need the productId, use searchProducts first.
@@ -461,6 +543,8 @@ export const executeToolCall = async (toolName, toolArgs) => {
       return await generatePaymentLinkTool(toolArgs);
     case 'addToCart':
       return await addToCartTool(toolArgs);
+    case 'getOrderHistory':
+      return await getOrderHistoryTool(toolArgs);
     default:
       return { success: false, error: `Unknown tool name: "${toolName}"` };
   }
