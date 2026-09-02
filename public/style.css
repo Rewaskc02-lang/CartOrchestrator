@@ -1,6 +1,33 @@
 /* ==========================================================================
-   AI Shopping Concierge - Dark Glass Design System & Theme Alignment
+   AI Shopping Concierge - Elite Autonomous AI Agent Design System
+   Palette: #0D1117 (Obsidian), #E4E6EB (Text Light), #3B82F6 (Electric Blue), #8B949E (Muted Slate)
    ========================================================================== */
+
+:root {
+  /* Core 4-Color Theme System */
+  --palette-bg-obsidian: #0D1117;
+  --palette-text-light: #E4E6EB;
+  --palette-accent-blue: #3B82F6;
+  --palette-muted-slate: #8B949E;
+
+  /* Surface Elevation & Glass Tokens */
+  --color-bg-base: #0D1117;
+  --color-surface-elevated-1: #161B22;
+  --color-surface-elevated-2: #21262D;
+  --color-surface-elevated-3: #30363D;
+  --color-border-subtle: rgba(139, 148, 158, 0.2);
+  --color-border-focus: rgba(59, 130, 246, 0.5);
+  
+  /* Semantic Accents */
+  --color-accent-emerald: #10B981;
+  --color-accent-emerald-light: #34D399;
+  --color-accent-amber: #F59E0B;
+  --color-accent-crimson: #EF4444;
+
+  /* Typography & Sizing */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
 
 /* Reset & Base Styles */
 * {
@@ -11,18 +38,23 @@
 
 html {
   scroll-behavior: smooth;
+  color-scheme: dark;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  background-color: #070a13;
-  color: #f8fafc;
+  font-family: var(--font-sans);
+  background-color: var(--palette-bg-obsidian);
+  color: var(--palette-text-light);
   min-height: 100vh;
   margin: 0;
   padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Chat Section Container with Flowing Particle Current Background */
+/* ==========================================================================
+   Chat Concierge Section (Interactive Canvas Current & Ambient Backing)
+   ========================================================================== */
 .chat-section-container {
   width: 100%;
   min-height: 90vh;
@@ -30,7 +62,7 @@ body {
   justify-content: center;
   align-items: center;
   padding: 40px 16px 80px 16px;
-  background: radial-gradient(circle at 50% 10%, #0e1628 0%, #070a13 60%, #03060c 100%);
+  background: radial-gradient(circle at 50% 10%, #161B22 0%, #0D1117 65%, #05070A 100%);
   position: relative;
   z-index: 10;
   overflow: hidden;
@@ -50,44 +82,47 @@ body {
   top: 45%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 750px;
-  height: 500px;
-  background: radial-gradient(circle, rgba(56, 189, 248, 0.14) 0%, rgba(37, 99, 235, 0.05) 45%, transparent 70%);
+  width: 780px;
+  height: 520px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.16) 0%, rgba(139, 148, 158, 0.05) 50%, transparent 70%);
   border-radius: 50%;
-  filter: blur(80px);
+  filter: blur(90px);
   pointer-events: none;
   z-index: 2;
 }
 
+/* ==========================================================================
+   Main Chat Glass Architecture & Agent Frame
+   ========================================================================== */
 .chat-wrapper {
   position: relative;
   z-index: 5;
   width: 100%;
-  max-width: 920px;
-  height: 84vh;
-  min-height: 600px;
-  background: rgba(11, 15, 25, 0.88);
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  max-width: 960px;
+  height: 86vh;
+  min-height: 640px;
+  background: rgba(22, 27, 34, 0.88);
+  border-radius: 18px;
+  border: 1px solid var(--color-border-subtle);
   display: flex;
   flex-direction: column;
   box-shadow: 
-    0 30px 70px -15px rgba(0, 0, 0, 0.9),
-    0 0 0 1px rgba(255, 255, 255, 0.06),
-    inset 0 1px 1px rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(20px);
+    0 30px 80px -15px rgba(0, 0, 0, 0.95),
+    0 0 0 1px rgba(139, 148, 158, 0.12),
+    inset 0 1px 1px rgba(228, 230, 235, 0.18);
+  backdrop-filter: blur(24px);
   overflow: hidden;
 }
 
-/* Header */
+/* Agent Header */
 .chat-header {
-  padding: 18px 24px;
-  background: rgba(14, 22, 40, 0.7);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 16px 24px;
+  background: rgba(13, 17, 23, 0.92);
+  border-bottom: 1px solid var(--color-border-subtle);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(12px);
 }
 
 .header-info {
@@ -97,17 +132,17 @@ body {
 }
 
 .header-info h2 {
-  font-size: 1.15rem;
+  font-size: 1.12rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--palette-text-light);
   letter-spacing: -0.01em;
 }
 
 .status-indicator {
   font-size: 0.75rem;
-  color: #38bdf8;
-  background: rgba(56, 189, 248, 0.12);
-  border: 1px solid rgba(56, 189, 248, 0.3);
+  color: var(--palette-accent-blue);
+  background: rgba(59, 130, 246, 0.12);
+  border: 1px solid rgba(59, 130, 246, 0.3);
   padding: 3px 10px;
   border-radius: 20px;
   font-weight: 600;
@@ -121,8 +156,14 @@ body {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #38bdf8;
-  box-shadow: 0 0 8px #38bdf8;
+  background: #3B82F6;
+  box-shadow: 0 0 8px #3B82F6;
+  animation: pulseDot 2s infinite ease-in-out;
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.85); }
 }
 
 .header-actions {
@@ -132,42 +173,44 @@ body {
 }
 
 .session-badge {
-  font-size: 0.75rem;
-  color: #94a3b8;
-  background: rgba(15, 23, 42, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.74rem;
+  color: var(--palette-muted-slate);
+  background: rgba(33, 38, 45, 0.85);
+  border: 1px solid var(--color-border-subtle);
   padding: 5px 10px;
   border-radius: 6px;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: var(--font-mono);
 }
 
 .btn-secondary {
-  background: rgba(15, 23, 42, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #cbd5e1;
+  background: rgba(33, 38, 45, 0.85);
+  border: 1px solid var(--color-border-subtle);
+  color: var(--palette-text-light);
   padding: 6px 14px;
   border-radius: 8px;
   font-size: 0.8rem;
   cursor: pointer;
   font-weight: 500;
-  transition: all 0.15s ease;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
   backdrop-filter: blur(4px);
 }
 
 .btn-secondary:hover {
-  background: rgba(30, 41, 59, 0.9);
-  border-color: rgba(56, 189, 248, 0.4);
-  color: #ffffff;
+  background: rgba(48, 54, 61, 0.95);
+  border-color: rgba(59, 130, 246, 0.5);
+  color: #FFFFFF;
 }
 
-/* Messages Feed */
+/* ==========================================================================
+   Messages Feed & Agent Bubbles
+   ========================================================================== */
 .chat-messages {
   flex: 1;
   padding: 24px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 20px;
   background: transparent;
 }
 
@@ -180,23 +223,29 @@ body {
 
 .chat-messages::-webkit-scrollbar-track,
 .products-grid::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.4);
+  background: rgba(13, 17, 23, 0.5);
 }
 
 .chat-messages::-webkit-scrollbar-thumb,
 .products-grid::-webkit-scrollbar-thumb {
-  background: rgba(56, 189, 248, 0.25);
+  background: rgba(139, 148, 158, 0.3);
   border-radius: 4px;
 }
 
 .chat-messages::-webkit-scrollbar-thumb:hover,
 .products-grid::-webkit-scrollbar-thumb:hover {
-  background: rgba(56, 189, 248, 0.5);
+  background: rgba(59, 130, 246, 0.6);
 }
 
 .message-row {
   display: flex;
   width: 100%;
+  animation: messageFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes messageFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .message-row.user {
@@ -208,7 +257,7 @@ body {
 }
 
 .message-bubble {
-  max-width: 84%;
+  max-width: 86%;
   padding: 14px 18px;
   border-radius: 14px;
   font-size: 0.95rem;
@@ -218,20 +267,20 @@ body {
 }
 
 .message-row.user .message-bubble {
-  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-  color: #ffffff;
-  border: 1px solid rgba(56, 189, 248, 0.35);
+  background: linear-gradient(135deg, #161B22 0%, #21262D 100%);
+  color: var(--palette-text-light);
+  border: 1px solid rgba(59, 130, 246, 0.45);
   border-bottom-right-radius: 2px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
 }
 
 .message-row.assistant .message-bubble {
-  background: rgba(19, 28, 49, 0.85);
-  color: #f1f5f9;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(22, 27, 34, 0.92);
+  color: var(--palette-text-light);
+  border: 1px solid var(--color-border-subtle);
   border-bottom-left-radius: 2px;
-  backdrop-filter: blur(8px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
 .message-bubble p {
@@ -242,7 +291,36 @@ body {
   margin-top: 10px;
 }
 
-/* Quick Prompts Chips */
+/* ==========================================================================
+   Tool Execution Step Pills (Live AI Agent Actions)
+   ========================================================================== */
+.agent-step-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(13, 17, 23, 0.85);
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  padding: 5px 12px;
+  border-radius: 12px;
+  font-size: 0.78rem;
+  color: var(--palette-accent-blue);
+  font-family: var(--font-mono);
+  margin-bottom: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.agent-step-icon {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #3B82F6;
+  box-shadow: 0 0 8px #3B82F6;
+}
+
+/* ==========================================================================
+   Quick Prompts & Suggestion Chips
+   ========================================================================== */
 .quick-prompts {
   display: flex;
   flex-wrap: wrap;
@@ -251,25 +329,31 @@ body {
 }
 
 .chip {
-  background: rgba(15, 23, 42, 0.85);
-  border: 1px solid rgba(56, 189, 248, 0.25);
-  color: #38bdf8;
+  background: rgba(33, 38, 45, 0.85);
+  border: 1px solid var(--color-border-subtle);
+  color: var(--palette-text-light);
   padding: 6px 12px;
   border-radius: 18px;
   font-size: 0.8rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .chip:hover {
-  background: rgba(56, 189, 248, 0.15);
-  border-color: #38bdf8;
+  background: rgba(59, 130, 246, 0.15);
+  border-color: var(--palette-accent-blue);
+  color: #FFFFFF;
   transform: translateY(-1px);
-  box-shadow: 0 2px 10px rgba(56, 189, 248, 0.25);
+  box-shadow: 0 2px 12px rgba(59, 130, 246, 0.3);
 }
 
-/* Multi-Product Horizontal Scrollable Carousel (A3) */
+/* ==========================================================================
+   Interactive Product Carousel & Cards
+   ========================================================================== */
 .products-grid {
   display: flex;
   gap: 14px;
@@ -282,26 +366,26 @@ body {
 }
 
 .product-card {
-  flex: 0 0 270px;
-  min-width: 270px;
-  max-width: 285px;
+  flex: 0 0 275px;
+  min-width: 275px;
+  max-width: 290px;
   scroll-snap-align: start;
-  background: rgba(15, 23, 42, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(22, 27, 34, 0.94);
+  border: 1px solid var(--color-border-subtle);
   border-radius: 12px;
   padding: 14px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   backdrop-filter: blur(12px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .product-card:hover {
   transform: translateY(-3px);
-  border-color: rgba(56, 189, 248, 0.4);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+  border-color: rgba(59, 130, 246, 0.5);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7);
 }
 
 .product-card-header {
@@ -314,7 +398,7 @@ body {
 .product-title {
   font-size: 0.92rem;
   font-weight: 600;
-  color: #f8fafc;
+  color: var(--palette-text-light);
   flex: 1;
   margin-right: 8px;
   line-height: 1.3;
@@ -322,13 +406,13 @@ body {
 
 .product-price {
   font-weight: 700;
-  color: #34d399;
+  color: var(--color-accent-emerald-light);
   font-size: 1rem;
 }
 
 .product-desc {
   font-size: 0.8rem;
-  color: #94a3b8;
+  color: var(--palette-muted-slate);
   margin-bottom: 12px;
   line-height: 1.4;
   display: -webkit-box;
@@ -346,16 +430,16 @@ body {
 }
 
 .product-tag {
-  background: rgba(56, 189, 248, 0.12);
-  color: #38bdf8;
+  background: rgba(59, 130, 246, 0.12);
+  color: var(--palette-accent-blue);
   padding: 3px 8px;
   border-radius: 4px;
   font-weight: 500;
-  border: 1px solid rgba(56, 189, 248, 0.2);
+  border: 1px solid rgba(59, 130, 246, 0.25);
 }
 
 .product-stock {
-  color: #34d399;
+  color: var(--color-accent-emerald-light);
   font-weight: 500;
 }
 
@@ -366,45 +450,47 @@ body {
 
 .btn-card-primary {
   flex: 1;
-  background: linear-gradient(135deg, #38bdf8 0%, #2563eb 100%);
-  color: #ffffff;
+  background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
+  color: #FFFFFF;
   border: none;
   padding: 8px 10px;
   border-radius: 6px;
   font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
   transition: opacity 0.15s, transform 0.15s;
 }
 
 .btn-card-primary:hover {
-  opacity: 0.92;
+  opacity: 0.94;
   transform: translateY(-1px);
 }
 
 .btn-card-secondary {
   flex: 1;
-  background: rgba(30, 41, 59, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  color: #e2e8f0;
+  background: rgba(33, 38, 45, 0.85);
+  border: 1px solid var(--color-border-subtle);
+  color: var(--palette-text-light);
   padding: 8px 10px;
   border-radius: 6px;
   font-size: 0.8rem;
   font-weight: 500;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: background 0.15s, border-color 0.15s;
 }
 
 .btn-card-secondary:hover {
-  background: rgba(51, 65, 85, 0.9);
-  color: #ffffff;
+  background: rgba(48, 54, 61, 0.95);
+  border-color: rgba(139, 148, 158, 0.4);
 }
 
-/* Payment / Checkout Card */
+/* ==========================================================================
+   Order Summary & Verified Razorpay Checkout Card
+   ========================================================================== */
 .checkout-card {
   margin-top: 14px;
-  background: rgba(6, 78, 59, 0.35);
+  background: rgba(16, 185, 129, 0.1);
   border: 1px solid rgba(52, 211, 153, 0.35);
   border-radius: 12px;
   padding: 16px;
@@ -414,7 +500,7 @@ body {
 .checkout-card-header {
   font-weight: 700;
   font-size: 0.98rem;
-  color: #34d399;
+  color: #34D399;
   margin-bottom: 6px;
   display: flex;
   align-items: center;
@@ -429,8 +515,8 @@ body {
 }
 
 .btn-pay-rzp {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  color: #ffffff;
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+  color: #FFFFFF;
   border: none;
   padding: 10px 18px;
   border-radius: 8px;
@@ -450,9 +536,9 @@ body {
 }
 
 .btn-link-fallback {
-  background: rgba(15, 23, 42, 0.8);
+  background: rgba(33, 38, 45, 0.85);
   border: 1px solid rgba(52, 211, 153, 0.35);
-  color: #34d399;
+  color: #34D399;
   padding: 10px 14px;
   border-radius: 8px;
   font-size: 0.85rem;
@@ -464,10 +550,12 @@ body {
 }
 
 .btn-link-fallback:hover {
-  background: rgba(6, 78, 59, 0.5);
+  background: rgba(16, 185, 129, 0.2);
 }
 
-/* Status Notifications */
+/* ==========================================================================
+   Alert Banners & Notifications
+   ========================================================================== */
 .alert-box {
   padding: 12px 16px;
   border-radius: 8px;
@@ -476,24 +564,26 @@ body {
 }
 
 .alert-success {
-  background: rgba(6, 78, 59, 0.4);
-  color: #a7f3d0;
-  border: 1px solid rgba(52, 211, 153, 0.3);
+  background: rgba(16, 185, 129, 0.12);
+  color: #A7F3D0;
+  border: 1px solid rgba(52, 211, 153, 0.35);
 }
 
 .alert-warning {
-  background: rgba(120, 53, 15, 0.35);
-  color: #fde68a;
-  border: 1px solid rgba(245, 158, 11, 0.3);
+  background: rgba(245, 158, 11, 0.12);
+  color: #FDE68A;
+  border: 1px solid rgba(245, 158, 11, 0.35);
 }
 
 .alert-error {
-  background: rgba(127, 29, 29, 0.35);
-  color: #fecaca;
-  border: 1px solid rgba(239, 68, 68, 0.3);
+  background: rgba(239, 68, 68, 0.12);
+  color: #FECACA;
+  border: 1px solid rgba(239, 68, 68, 0.35);
 }
 
-/* Typing Indicator */
+/* ==========================================================================
+   Typing & Thinking Indicator
+   ========================================================================== */
 .typing-indicator {
   padding: 0 24px 14px 24px;
   background: transparent;
@@ -506,19 +596,19 @@ body {
 .typing-bubble {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  background: rgba(19, 28, 49, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  gap: 8px;
+  background: rgba(22, 27, 34, 0.9);
+  border: 1px solid var(--color-border-subtle);
   padding: 8px 14px;
   border-radius: 14px;
   font-size: 0.82rem;
-  color: #94a3b8;
+  color: var(--palette-muted-slate);
 }
 
 .typing-bubble span:not(.typing-text) {
   width: 6px;
   height: 6px;
-  background: #38bdf8;
+  background: #3B82F6;
   border-radius: 50%;
   animation: typingBounce 1.4s infinite ease-in-out both;
 }
@@ -531,12 +621,14 @@ body {
   40% { transform: scale(1); opacity: 1; }
 }
 
-/* Input Bar */
+/* ==========================================================================
+   Input Bar & Command Center
+   ========================================================================== */
 .chat-input-bar {
   padding: 16px 24px;
-  background: rgba(14, 22, 40, 0.85);
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(12px);
+  background: rgba(13, 17, 23, 0.95);
+  border-top: 1px solid var(--color-border-subtle);
+  backdrop-filter: blur(16px);
 }
 
 .chat-form {
@@ -546,43 +638,43 @@ body {
 
 .chat-form input {
   flex: 1;
-  padding: 12px 16px;
-  background: rgba(15, 23, 42, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 10px;
+  padding: 13px 18px;
+  background: rgba(22, 27, 34, 0.92);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 12px;
   font-size: 0.95rem;
-  color: #f8fafc;
+  color: var(--palette-text-light);
   outline: none;
   transition: all 0.2s ease;
 }
 
 .chat-form input::placeholder {
-  color: #64748b;
+  color: var(--palette-muted-slate);
 }
 
 .chat-form input:focus {
-  border-color: #38bdf8;
-  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
-  background: rgba(15, 23, 42, 0.98);
+  border-color: var(--palette-accent-blue);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.22);
+  background: rgba(22, 27, 34, 0.98);
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #38bdf8 0%, #2563eb 100%);
-  color: #ffffff;
+  background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
+  color: #FFFFFF;
   border: none;
-  padding: 12px 22px;
-  border-radius: 10px;
+  padding: 12px 24px;
+  border-radius: 12px;
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.4);
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.4);
   transition: all 0.2s ease;
 }
 
 .btn-primary:hover {
   opacity: 0.95;
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(56, 189, 248, 0.5);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.55);
 }
 
 .btn-primary:disabled {
@@ -591,7 +683,9 @@ body {
   transform: none;
 }
 
-/* Responsive adjustments */
+/* ==========================================================================
+   Responsive Viewports
+   ========================================================================== */
 @media (max-width: 768px) {
   .chat-section-container {
     padding: 20px 8px 40px 8px;
@@ -601,7 +695,7 @@ body {
     border-radius: 12px;
   }
   .message-bubble {
-    max-width: 90%;
+    max-width: 92%;
   }
   .product-card {
     flex: 0 0 240px;

@@ -36,11 +36,12 @@ const resetSession = () => {
     chatMessages.innerHTML = `
       <div class="message-row assistant">
         <div class="message-bubble">
-          <p>Fresh conversation started! How can I help you find the right shoes or apparel today?</p>
+          <p>🔄 <strong>Fresh session initiated.</strong><br/>How can I assist your shopping journey today?</p>
           <div class="quick-prompts">
-            <button class="chip" data-prompt="Show me running shoes under $180">Running shoes under $180</button>
-            <button class="chip" data-prompt="I want to buy AeroGlide with coupon WELCOME10">Buy AeroGlide with 10% coupon</button>
-            <button class="chip" data-prompt="What promo coupons are available?">Available coupons</button>
+            <button class="chip" data-prompt="Show me running shoes under $180">🏃 Running shoes under $180</button>
+            <button class="chip" data-prompt="I want to buy AeroGlide with coupon WELCOME10">🏷️ Buy AeroGlide with 10% coupon</button>
+            <button class="chip" data-prompt="I want to buy AeroGlide with coupon EXPIRED50">🛡️ Guardrail Demo: Expired coupon</button>
+            <button class="chip" data-prompt="What promo coupons are available?">🎟️ Available promo coupons</button>
           </div>
         </div>
       </div>
@@ -151,14 +152,17 @@ const appendAssistantMessage = (replyText, data = {}) => {
     const checkoutBox = document.createElement('div');
     checkoutBox.className = 'checkout-card';
     checkoutBox.innerHTML = `
-      <div class="checkout-card-header">Order Ready for Checkout</div>
-      <p style="font-size: 0.85rem; color: #166534;">Click below to launch the Razorpay Checkout modal or open the direct payment link.</p>
+      <div class="checkout-card-header">
+        <span>🛡️ Razorpay Verified Order</span>
+        <span style="font-size:0.75rem; color: #34D399; font-weight: normal; margin-left: auto;">Zero-Trust Verified</span>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--palette-muted-slate); margin-top: 4px;">Click below to launch the verified Razorpay Checkout modal or open your direct secure link.</p>
       <div class="checkout-actions">
         <button class="btn-pay-rzp" data-order-id="${data.orderId}" data-payment-link="${data.paymentLink}">
           💳 Pay via Razorpay Modal
         </button>
         <a href="${data.paymentLink}" target="_blank" rel="noopener noreferrer" class="btn-link-fallback">
-          Open Link ↗
+          Open Direct Link ↗
         </a>
       </div>
     `;

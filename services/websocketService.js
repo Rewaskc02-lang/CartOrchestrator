@@ -49,6 +49,10 @@ export const initWebSocketServer = (httpServer) => {
   const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
   global.wss = wss;
 
+  wss.on('error', (err) => {
+    console.warn('[WebSocket Server Error]', err.message);
+  });
+
   wss.on('connection', (ws, req) => {
     // Extract sessionId from URL query params
     const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`);

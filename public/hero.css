@@ -3,15 +3,19 @@
    ========================================================================== */
 
 :root {
-  --hero-bg: #070a13;
-  --hero-surface: #0b0f19;
-  --hero-surface-elevated: #0f172a;
-  --hero-accent-cyan: #38bdf8;
-  --hero-accent-blue: #2563eb;
-  --hero-accent-emerald: #10b981;
-  --hero-text-primary: #f8fafc;
-  --hero-text-secondary: #94a3b8;
-  --hero-border-glass: rgba(255, 255, 255, 0.08);
+  --palette-bg-obsidian: #0D1117;
+  --palette-text-light: #E4E6EB;
+  --palette-accent-blue: #3B82F6;
+  --palette-muted-slate: #8B949E;
+  --hero-bg: #0D1117;
+  --hero-surface: #161B22;
+  --hero-surface-elevated: #21262D;
+  --hero-accent-cyan: #3B82F6;
+  --hero-accent-blue: #3B82F6;
+  --hero-accent-emerald: #10B981;
+  --hero-text-primary: #E4E6EB;
+  --hero-text-secondary: #8B949E;
+  --hero-border-glass: rgba(139, 148, 158, 0.22);
 }
 
 /* ==========================================
@@ -21,7 +25,7 @@
   position: relative;
   width: 100%;
   min-height: 92vh;
-  background: radial-gradient(circle at 50% 15%, #0e1628 0%, #070a13 65%, #03060c 100%);
+  background: radial-gradient(circle at 50% 15%, #161B22 0%, #0D1117 65%, #05070A 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -32,11 +36,74 @@
   user-select: none;
 }
 
+/* 1. Dotted Grid Texture Layer (Additive Ambient Texture) */
+.hero-dot-grid {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  background-image: radial-gradient(rgba(139, 148, 158, 0.18) 1.2px, transparent 1.2px);
+  background-size: 28px 28px;
+  background-position: center center;
+  mask-image: radial-gradient(circle at 50% 45%, black 40%, rgba(0, 0, 0, 0.35) 80%, transparent 100%);
+  -webkit-mask-image: radial-gradient(circle at 50% 45%, black 40%, rgba(0, 0, 0, 0.35) 80%, transparent 100%);
+}
+
+/* 2. Glowing Dual-Arc Horizon Accent (Additive Ambient Lighting) */
+.hero-dual-arc-glow {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.hero-arc {
+  position: absolute;
+  bottom: -170px;
+  width: 760px;
+  height: 420px;
+  border-radius: 50%;
+  filter: blur(85px);
+  opacity: 0.38;
+  pointer-events: none;
+  will-change: transform, opacity;
+  animation: heroArcPulse 9s ease-in-out infinite alternate;
+}
+
+.hero-arc-left {
+  left: -210px;
+  background: radial-gradient(circle at 60% 40%, #3B82F6 0%, #8B949E 40%, #0D1117 75%, transparent 100%);
+  transform: rotate(-16deg);
+}
+
+.hero-arc-right {
+  right: -210px;
+  background: radial-gradient(circle at 40% 40%, #3B82F6 0%, #8B949E 40%, #0D1117 75%, transparent 100%);
+  transform: rotate(16deg);
+  animation-delay: -4.5s;
+}
+
+@keyframes heroArcPulse {
+  0% {
+    opacity: 0.28;
+    transform: scale(0.96) translateY(0);
+  }
+  100% {
+    opacity: 0.44;
+    transform: scale(1.04) translateY(-10px);
+  }
+}
+
 /* Vignette & Fine Grain */
 .hero-vignette {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 45%, transparent 35%, rgba(3, 6, 12, 0.7) 80%, rgba(3, 6, 12, 0.95) 100%);
+  background: radial-gradient(circle at 50% 45%, transparent 35%, rgba(5, 7, 10, 0.7) 80%, rgba(5, 7, 10, 0.95) 100%);
   pointer-events: none;
   z-index: 10;
 }
@@ -67,23 +134,23 @@
   align-items: center;
   gap: 8px;
   padding: 6px 14px;
-  background: rgba(15, 23, 42, 0.75);
+  background: rgba(22, 27, 34, 0.85);
   border: 1px solid var(--hero-border-glass);
   border-radius: 20px;
   font-size: 0.8rem;
   font-weight: 500;
-  color: var(--hero-accent-cyan);
+  color: var(--palette-accent-blue);
   backdrop-filter: blur(8px);
   margin-bottom: 16px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
 }
 
 .hero-badge-dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #38bdf8;
-  box-shadow: 0 0 8px #38bdf8;
+  background: #3B82F6;
+  box-shadow: 0 0 8px #3B82F6;
 }
 
 .hero-title {
@@ -91,14 +158,14 @@
   font-weight: 800;
   line-height: 1.15;
   letter-spacing: -0.03em;
-  background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+  background: linear-gradient(180deg, #FFFFFF 0%, #E4E6EB 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-bottom: 14px;
 }
 
 .hero-title span {
-  background: linear-gradient(135deg, #38bdf8 0%, #3b82f6 100%);
+  background: linear-gradient(135deg, #60A5FA 0%, #3B82F6 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -119,15 +186,15 @@
 }
 
 .hero-btn-primary {
-  background: linear-gradient(135deg, #38bdf8 0%, #2563eb 100%);
-  color: #ffffff;
+  background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
+  color: #FFFFFF;
   border: none;
   padding: 12px 24px;
   border-radius: 8px;
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 4px 20px rgba(37, 99, 235, 0.4);
+  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
   transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
   display: inline-flex;
   align-items: center;
@@ -137,11 +204,11 @@
 
 .hero-btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 25px rgba(56, 189, 248, 0.5);
+  box-shadow: 0 6px 25px rgba(59, 130, 246, 0.6);
 }
 
 .hero-btn-glass {
-  background: rgba(15, 23, 42, 0.65);
+  background: rgba(22, 27, 34, 0.75);
   color: var(--hero-text-primary);
   border: 1px solid var(--hero-border-glass);
   padding: 12px 20px;
@@ -155,8 +222,8 @@
 }
 
 .hero-btn-glass:hover {
-  background: rgba(30, 41, 59, 0.85);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(33, 38, 45, 0.9);
+  border-color: rgba(139, 148, 158, 0.4);
 }
 
 /* Outer Device Bezel Container */
@@ -165,13 +232,13 @@
   width: 100%;
   max-width: 960px;
   height: 520px;
-  background: rgba(11, 15, 25, 0.82);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(22, 27, 34, 0.85);
+  border: 1px solid rgba(139, 148, 158, 0.25);
   border-radius: 28px;
   box-shadow: 
     0 30px 80px -15px rgba(0, 0, 0, 0.9),
-    0 0 0 1px rgba(255, 255, 255, 0.05),
-    inset 0 1px 1px rgba(255, 255, 255, 0.2);
+    0 0 0 1px rgba(139, 148, 158, 0.1),
+    inset 0 1px 1px rgba(228, 230, 235, 0.15);
   backdrop-filter: blur(20px);
   overflow: hidden;
   display: flex;
@@ -188,7 +255,7 @@
   left: 8%;
   right: 8%;
   height: 1px;
-  background: linear-gradient(90deg, transparent 0%, rgba(56, 189, 248, 0.4) 50%, transparent 100%);
+  background: linear-gradient(90deg, transparent 0%, rgba(59, 130, 246, 0.5) 50%, transparent 100%);
   pointer-events: none;
   z-index: 8;
 }
@@ -218,12 +285,12 @@
   position: relative;
   width: 90%;
   max-width: 660px;
-  background: rgba(14, 20, 36, 0.92);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(13, 17, 23, 0.94);
+  border: 1px solid rgba(139, 148, 158, 0.25);
   border-radius: 14px;
   box-shadow: 
     0 25px 60px -10px rgba(0, 0, 0, 0.85),
-    0 0 0 1px rgba(255, 255, 255, 0.06);
+    0 0 0 1px rgba(139, 148, 158, 0.1);
   backdrop-filter: blur(16px);
   z-index: 6;
   transform-style: preserve-3d;
@@ -235,8 +302,8 @@
 /* Window Chrome Top Bar */
 .hero-pip-titlebar {
   padding: 10px 14px;
-  background: rgba(10, 15, 28, 0.95);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(22, 27, 34, 0.95);
+  border-bottom: 1px solid rgba(139, 148, 158, 0.2);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -253,13 +320,13 @@
   border-radius: 50%;
 }
 
-.hero-pip-dot.red { background: #ef4444; box-shadow: 0 0 6px rgba(239, 68, 68, 0.4); }
-.hero-pip-dot.yellow { background: #eab308; box-shadow: 0 0 6px rgba(234, 179, 8, 0.4); }
-.hero-pip-dot.green { background: #22c55e; box-shadow: 0 0 6px rgba(34, 197, 94, 0.4); }
+.hero-pip-dot.red { background: #EF4444; box-shadow: 0 0 6px rgba(239, 68, 68, 0.4); }
+.hero-pip-dot.yellow { background: #F59E0B; box-shadow: 0 0 6px rgba(245, 158, 11, 0.4); }
+.hero-pip-dot.green { background: #10B981; box-shadow: 0 0 6px rgba(16, 185, 129, 0.4); }
 
 .hero-pip-title {
   font-size: 0.76rem;
-  color: var(--hero-text-secondary);
+  color: var(--palette-muted-slate);
   font-weight: 500;
   letter-spacing: 0.02em;
   display: flex;
@@ -269,9 +336,9 @@
 
 .hero-pip-live-badge {
   font-size: 0.68rem;
-  color: #38bdf8;
-  background: rgba(56, 189, 248, 0.12);
-  border: 1px solid rgba(56, 189, 248, 0.3);
+  color: var(--palette-accent-blue);
+  background: rgba(59, 130, 246, 0.12);
+  border: 1px solid rgba(59, 130, 246, 0.3);
   padding: 1px 6px;
   border-radius: 4px;
   font-weight: 600;
@@ -291,9 +358,9 @@
 /* User Bubble in Mockup */
 .mock-msg-user {
   align-self: flex-end;
-  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-  color: #ffffff;
-  border: 1px solid rgba(56, 189, 248, 0.3);
+  background: linear-gradient(135deg, #161B22 0%, #21262D 100%);
+  color: var(--palette-text-light);
+  border: 1px solid rgba(59, 130, 246, 0.4);
   padding: 8px 12px;
   border-radius: 10px;
   border-bottom-right-radius: 2px;
@@ -304,9 +371,9 @@
 /* Assistant Bubble in Mockup */
 .mock-msg-assistant {
   align-self: flex-start;
-  background: rgba(19, 28, 49, 0.85);
-  color: #f1f5f9;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(22, 27, 34, 0.9);
+  color: var(--palette-text-light);
+  border: 1px solid rgba(139, 148, 158, 0.2);
   padding: 10px 12px;
   border-radius: 10px;
   border-bottom-left-radius: 2px;
@@ -324,8 +391,8 @@
 
 .mock-product-card {
   flex: 1;
-  background: rgba(15, 23, 42, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(13, 17, 23, 0.95);
+  border: 1px solid rgba(139, 148, 158, 0.25);
   border-radius: 8px;
   padding: 8px 10px;
   display: flex;
@@ -336,7 +403,7 @@
 .mock-prod-title {
   font-size: 0.78rem;
   font-weight: 600;
-  color: #f8fafc;
+  color: var(--palette-text-light);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -345,7 +412,7 @@
 .mock-prod-price {
   font-size: 0.82rem;
   font-weight: 700;
-  color: #34d399;
+  color: #34D399;
   margin-top: 2px;
 }
 
@@ -358,21 +425,21 @@
 }
 
 .mock-prod-badge {
-  background: rgba(56, 189, 248, 0.12);
-  color: #38bdf8;
+  background: rgba(59, 130, 246, 0.12);
+  color: var(--palette-accent-blue);
   padding: 1px 5px;
   border-radius: 3px;
   font-weight: 500;
 }
 
 .mock-prod-stock {
-  color: #34d399;
+  color: #34D399;
 }
 
 /* Mock Checkout Card */
 .mock-checkout-box {
   margin-top: 6px;
-  background: rgba(6, 78, 59, 0.35);
+  background: rgba(16, 185, 129, 0.12);
   border: 1px solid rgba(52, 211, 153, 0.35);
   border-radius: 8px;
   padding: 8px 10px;
@@ -391,17 +458,17 @@
 .mock-checkout-title {
   font-size: 0.76rem;
   font-weight: 700;
-  color: #34d399;
+  color: #34D399;
 }
 
 .mock-checkout-sub {
   font-size: 0.68rem;
-  color: #a7f3d0;
+  color: #A7F3D0;
 }
 
 .mock-btn-pay {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  color: #ffffff;
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+  color: #FFFFFF;
   border: none;
   padding: 6px 12px;
   border-radius: 6px;
@@ -417,18 +484,18 @@
    ========================================== */
 .hero-trust-chip {
   position: absolute;
-  background: rgba(11, 17, 32, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(22, 27, 34, 0.92);
+  border: 1px solid rgba(139, 148, 158, 0.25);
   padding: 8px 14px;
   border-radius: 20px;
   font-size: 0.76rem;
   font-weight: 600;
-  color: #f1f5f9;
+  color: var(--palette-text-light);
   backdrop-filter: blur(12px);
   display: flex;
   align-items: center;
   gap: 8px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
   z-index: 8;
   opacity: 0;
   transform: translateY(14px);
@@ -458,7 +525,7 @@
 }
 
 .hero-trust-chip-accent {
-  color: var(--hero-accent-cyan);
+  color: var(--palette-accent-blue);
 }
 
 @keyframes chipEntrance {
@@ -478,6 +545,11 @@
     animation: none !important;
     opacity: 1 !important;
   }
+  .hero-arc {
+    animation: none !important;
+    opacity: 0.32 !important;
+    transform: none !important;
+  }
   #flow-canvas {
     opacity: 0.5;
   }
@@ -490,6 +562,19 @@
   }
   .hero-pip-window {
     width: 95%;
+  }
+  .hero-arc {
+    width: 440px;
+    height: 250px;
+    bottom: -90px;
+    filter: blur(60px);
+    opacity: 0.28;
+  }
+  .hero-arc-left {
+    left: -130px;
+  }
+  .hero-arc-right {
+    right: -130px;
   }
   .hero-trust-chip.top-left {
     top: 12px;

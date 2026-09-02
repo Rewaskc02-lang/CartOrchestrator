@@ -8,8 +8,8 @@ const sessionRequestCounts = new Map(); // sessionId -> { count, resetTime }
 const globalRequestCount = { count: 0, resetTime: Date.now() + 60000 };
 
 const WINDOW_MS = 60 * 1000; // 1 minute window
-const SESSION_LIMIT = 25; // 25 requests per session per minute (generous for rapid judge testing)
-const GLOBAL_LIMIT = 150; // 150 requests globally per minute
+const SESSION_LIMIT = parseInt(process.env.SESSION_RATE_LIMIT, 10) || 10; // 10 requests per session per minute
+const GLOBAL_LIMIT = parseInt(process.env.GLOBAL_RATE_LIMIT, 10) || 150; // 150 requests globally per minute
 
 export const rateLimitChat = (req, res, next) => {
   const sessionId = req.body?.sessionId;

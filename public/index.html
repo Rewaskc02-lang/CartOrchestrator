@@ -18,11 +18,18 @@
     <div class="hero-grain"></div>
     <div class="hero-vignette"></div>
 
+    <!-- Background Additive Visual Layers: Dotted Grid Texture & Dual-Arc Glowing Horizon -->
+    <div class="hero-dot-grid" aria-hidden="true"></div>
+    <div class="hero-dual-arc-glow" aria-hidden="true">
+      <div class="hero-arc hero-arc-left"></div>
+      <div class="hero-arc hero-arc-right"></div>
+    </div>
+
     <!-- Header & Headline -->
     <div class="hero-header-content">
       <div class="hero-badge">
         <span class="hero-badge-dot"></span>
-        <span>AI Shopping Concierge &bull; Autonomous Commerce Engine</span>
+        <span>AI Shopping Agent &bull; Autonomous Commerce Engine</span>
       </div>
       <h1 class="hero-title">
         Engineered for Speed.<br />
@@ -152,9 +159,10 @@
       <header class="chat-header">
         <div class="header-info">
           <h2>AI Shopping Concierge</h2>
-          <span class="status-indicator">Online</span>
+          <span class="status-indicator">Autonomous Agent Online</span>
         </div>
         <div class="header-actions">
+          <span class="session-badge" style="color: var(--palette-accent-blue); border-color: rgba(59, 130, 246, 0.35);">⚡ Gemini Flash Tool-Calling</span>
           <span id="session-badge" class="session-badge" title="Active Session ID">Session: ...</span>
           <button id="reset-session-btn" class="btn-secondary" title="Start a fresh conversation">New Chat</button>
           <a href="/admin/orders" target="_blank" class="btn-secondary" style="text-decoration:none; display:inline-flex; align-items:center; gap:4px;" title="View read-only audit log registry">
@@ -167,12 +175,12 @@
       <main id="chat-messages" class="chat-messages">
         <div class="message-row assistant">
           <div class="message-bubble">
-            <p>Hello! I'm your AI Shopping Agent. How can I help you find the right shoes or apparel today?</p>
+            <p>👋 <strong>Welcome to the Autonomous AI Shopping Concierge.</strong><br/>I can search real database inventory, apply promotional discounts, and generate verified Razorpay checkout links with zero-trust server validation.</p>
             <div class="quick-prompts">
-              <button class="chip" data-prompt="Show me running shoes under $180">Running shoes under $180</button>
-              <button class="chip" data-prompt="I want to buy AeroGlide with coupon WELCOME10">Buy AeroGlide with 10% coupon</button>
-              <button class="chip" data-prompt="I want to buy AeroGlide with coupon EXPIRED50">Test expired coupon guardrail</button>
-              <button class="chip" data-prompt="What promo coupons are available?">Available coupons</button>
+              <button class="chip" data-prompt="Show me running shoes under $180">🏃 Running shoes under $180</button>
+              <button class="chip" data-prompt="I want to buy AeroGlide with coupon WELCOME10">🏷️ Buy AeroGlide with 10% coupon</button>
+              <button class="chip" data-prompt="I want to buy AeroGlide with coupon EXPIRED50">🛡️ Guardrail Demo: Expired coupon</button>
+              <button class="chip" data-prompt="What promo coupons are available?">🎟️ Available promo coupons</button>
             </div>
           </div>
         </div>
