@@ -228,11 +228,21 @@ export const initWebSocketServer = (httpServer) => {
         }
       } catch (err) {
         console.error('[WS Error]', err);
+
+        let friendlyMessage = 'An unexpected error occurred during real-time processing. Please try again.';
+        const errMsg = err.message || '';
+
+        if (errMsg.includes('429') || errMsg.includes('quota') || errMsg.includes('RESOURCE_EXHAUSTED') || errMsg.includes('Quota exceeded')) {
+          friendlyMessage = 'The AI Shopping Assistant is temporarily busy due to high traffic. Please try again in a few moments.';
+        } else if (errMsg.includes('503') || errMsg.includes('UNAVAILABLE') || errMsg.includes('high demand')) {
+          friendlyMessage = 'The AI model is experiencing high demand. Please try sending your message again shortly.';
+        }
+
         ws.send(
           JSON.stringify({
             type: 'error',
             error: 'WebSocketProcessingError',
-            message: err.message || 'An error occurred during real-time processing.',
+            message: friendlyMessage,
           })
         );
       }

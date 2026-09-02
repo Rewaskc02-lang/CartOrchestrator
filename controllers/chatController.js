@@ -219,9 +219,19 @@ export const handleChat = async (req, res) => {
     });
   } catch (error) {
     console.error('[Chat Controller Error]', error);
+
+    let friendlyMessage = 'An unexpected error occurred while communicating with the AI agent. Please try again.';
+    const errMsg = error.message || '';
+
+    if (errMsg.includes('429') || errMsg.includes('quota') || errMsg.includes('RESOURCE_EXHAUSTED') || errMsg.includes('Quota exceeded')) {
+      friendlyMessage = 'The AI Shopping Assistant is temporarily busy due to high traffic. Please try again in a few moments.';
+    } else if (errMsg.includes('503') || errMsg.includes('UNAVAILABLE') || errMsg.includes('high demand')) {
+      friendlyMessage = 'The AI model is experiencing high demand. Please try sending your message again shortly.';
+    }
+
     return res.status(500).json({
       error: 'ChatProcessingError',
-      message: error.message || 'An unexpected error occurred while communicating with the AI agent.',
+      message: friendlyMessage,
     });
   }
 };
