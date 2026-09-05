@@ -3,7 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Shopping Concierge &bull; Autonomous Commerce</title>
+  <title>Autonomous AI Commerce &bull; Verified Shopping Engine</title>
+  <meta name="description" content="Minimalist autonomous AI shopping concierge with zero-trust server validation and verified Razorpay checkout." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/hero.css" />
   <link rel="stylesheet" href="/style.css" />
   <!-- Razorpay Checkout JS SDK -->
@@ -11,66 +15,144 @@
 </head>
 <body>
   <!-- ==========================================
-       HERO SECTION — Picture-in-Picture Product Mockup
+       SKIPER-15 3D ISOMETRIC PRELOADER
+       ========================================== -->
+  <div id="skiper-preloader" class="skiper-preloader" aria-hidden="true">
+    <div class="skiper-loader-content">
+      <div class="box-3d-scene">
+        <div class="box-3d-cube">
+          <div class="cube-face cube-front"></div>
+          <div class="cube-face cube-back"></div>
+          <div class="cube-face cube-right"></div>
+          <div class="cube-face cube-left"></div>
+          <div class="cube-face cube-top"></div>
+          <div class="cube-face cube-bottom"></div>
+        </div>
+      </div>
+      <div class="skiper-loader-meta">
+        <span class="skiper-loader-indicator"></span>
+        <span class="skiper-loader-text">Initializing autonomous engine</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       MINIMALIST LOGIN MODAL (Sign In By Name)
+       ========================================== -->
+  <div id="login-modal" class="auth-modal-overlay hidden" aria-hidden="true">
+    <div class="auth-modal-card">
+      <div class="auth-modal-header">
+        <div class="auth-modal-badge">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        </div>
+        <button id="close-login-btn" class="auth-close-btn" title="Close">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <h3 class="auth-modal-title">Sign In to AI Concierge</h3>
+      <p class="auth-modal-subtitle">Enter your name to personalize your dashboard and shopping experience.</p>
+      
+      <form id="login-form" class="auth-modal-form">
+        <div class="auth-input-group">
+          <label for="user-name-input">Your Name</label>
+          <input
+            type="text"
+            id="user-name-input"
+            placeholder="e.g. Alex Morgan"
+            maxlength="32"
+            autocomplete="name"
+            required
+          />
+        </div>
+        <button type="submit" class="btn-auth-submit">
+          <span>Continue</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       TOP NAVIGATION BAR
+       ========================================== -->
+  <nav class="top-nav-bar">
+    <div class="nav-brand">
+      <div class="brand-logo-mark">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+      </div>
+      <span class="brand-name">CartOrchestrator</span>
+    </div>
+
+    <div class="nav-right">
+      <div id="nav-user-container">
+        <!-- Injected via JavaScript based on login state -->
+      </div>
+      <a href="/admin/orders" target="_blank" class="nav-link-btn" title="Audit Registry">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+        <span>Audit</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- ==========================================
+       HERO SECTION — Minimalist Autonomous Commerce
        ========================================== -->
   <section id="hero-section" class="hero-section">
-    <!-- Tactile Overlays: SVG Noise Grain & Radial Vignette -->
-    <div class="hero-grain"></div>
-    <div class="hero-vignette"></div>
-
-    <!-- Background Additive Visual Layers: Dotted Grid Texture & Dual-Arc Glowing Horizon -->
+    <!-- Ambient Texture & Lighting -->
     <div class="hero-dot-grid" aria-hidden="true"></div>
     <div class="hero-dual-arc-glow" aria-hidden="true">
       <div class="hero-arc hero-arc-left"></div>
       <div class="hero-arc hero-arc-right"></div>
     </div>
+    <div class="hero-vignette" aria-hidden="true"></div>
 
-    <!-- Header & Headline -->
+    <!-- Header Copy -->
     <div class="hero-header-content">
       <div class="hero-badge">
         <span class="hero-badge-dot"></span>
         <span>AI Shopping Agent &bull; Autonomous Commerce Engine</span>
       </div>
       <h1 class="hero-title">
-        Engineered for Speed.<br />
-        <span>Gated by Autonomous AI.</span>
+        Intelligent Shopping.<br />
+        <span>Verified by Server AI.</span>
       </h1>
       <p class="hero-subtitle">
-        Experience autonomous e-commerce with zero-trust server validation, explainable coupon intelligence, and verified Razorpay checkouts.
+        Zero-trust pricing validation, live catalog intelligence, and end-to-end Razorpay transactions.
       </p>
       <div class="hero-cta-group">
         <a href="#chat-app" class="hero-btn-primary">
-          <span>Launch AI Assistant &darr;</span>
+          <span>Launch AI Assistant</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
         </a>
         <a href="/admin/orders" target="_blank" class="hero-btn-glass">
-          <span>📋 View Audit Registry</span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+          <span>Audit Registry</span>
         </a>
       </div>
     </div>
 
-    <!-- Layer 1: Outer Device Frame Container -->
+    <!-- Outer Device Frame & Floating Preview -->
     <div id="hero-device-frame" class="hero-device-frame">
       <div class="hero-frame-bezel-top"></div>
 
-      <!-- Layer 4: Floating Trust Chips (Backed by Real Architecture) -->
+      <!-- Trust Badges with Standard SVGs -->
       <div class="hero-trust-chip top-left">
-        <span class="hero-trust-chip-icon">🛡️</span>
+        <svg class="hero-svg-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
         <span>Razorpay <strong class="hero-trust-chip-accent">Verified Checkout</strong></span>
       </div>
 
       <div class="hero-trust-chip top-right">
-        <span class="hero-trust-chip-icon">⚡</span>
-        <span>Zero-Trust <strong class="hero-trust-chip-accent">Server Pricing</strong></span>
+        <svg class="hero-svg-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+        <span>Zero-Trust <strong class="hero-trust-chip-accent">Server Validation</strong></span>
       </div>
 
       <div class="hero-trust-chip bottom-right">
-        <span class="hero-trust-chip-icon">📋</span>
-        <span>18 Catalog Items &bull; <strong class="hero-trust-chip-accent">Live Audit Log</strong></span>
+        <svg class="hero-svg-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        <span>Real-time <strong class="hero-trust-chip-accent">Live Stream</strong></span>
       </div>
 
-      <!-- Layer 3: Floating Product Window (Picture-in-Picture Chat UI) -->
+      <!-- Floating Live UI Window Mockup -->
       <div id="hero-pip-window" class="hero-pip-window">
-        <!-- Minimal Browser Titlebar Chrome -->
         <div class="hero-pip-titlebar">
           <div class="hero-pip-dots">
             <span class="hero-pip-dot red"></span>
@@ -78,25 +160,21 @@
             <span class="hero-pip-dot green"></span>
           </div>
           <div class="hero-pip-title">
-            <span>AI Shopping Concierge</span>
-            <span class="hero-pip-live-badge">LIVE SESSION</span>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            <span>Live Session Preview</span>
           </div>
-          <div style="width: 40px;"></div>
+          <div class="hero-pip-live-badge">ACTIVE</div>
         </div>
 
-        <!-- Authentic Conversation Transcript from Real Catalog -->
         <div class="hero-pip-body">
-          <!-- 1. User Message -->
           <div class="mock-msg-user">
             Show me running shoes under $180
           </div>
 
-          <!-- 2. Assistant Message with Real Products -->
           <div class="mock-msg-assistant">
-            <div>I found two verified running shoes in our catalog matching your budget:</div>
+            <div>Verified matching items in catalog:</div>
             
             <div class="mock-products-row">
-              <!-- Real Product 1 -->
               <div class="mock-product-card">
                 <div class="mock-prod-title">CloudStrider Daily Trainer</div>
                 <div class="mock-prod-price">$139.50</div>
@@ -106,7 +184,6 @@
                 </div>
               </div>
 
-              <!-- Real Product 2 -->
               <div class="mock-product-card">
                 <div class="mock-prod-title">VortexStability Runners</div>
                 <div class="mock-prod-price">$145.00</div>
@@ -118,22 +195,23 @@
             </div>
           </div>
 
-          <!-- 3. User Message Applying Coupon -->
           <div class="mock-msg-user">
             Apply coupon SPRINT20 and checkout
           </div>
 
-          <!-- 4. Assistant Verified Checkout Message -->
           <div class="mock-msg-assistant">
-            <div>✅ Applied coupon <strong>SPRINT20</strong> (-$27.90 discount). Subtotal: $139.50 &bull; Total: <strong>$111.60</strong></div>
+            <div>Coupon <strong>SPRINT20</strong> applied (-$27.90). Order Total: <strong>$111.60</strong></div>
             
             <div class="mock-checkout-box">
               <div class="mock-checkout-left">
-                <span class="mock-checkout-title">Razorpay Order #TWeG1s</span>
+                <div class="mock-checkout-title">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+                  <span>Razorpay Order #TWeG1s</span>
+                </div>
                 <span class="mock-checkout-sub">Verified Total: $111.60</span>
               </div>
               <button class="mock-btn-pay">
-                <span>💳 Pay via Razorpay</span>
+                <span>Pay via Razorpay</span>
               </button>
             </div>
           </div>
@@ -143,69 +221,75 @@
   </section>
 
   <!-- ==========================================
-       AI SHOPPING CONCIERGE (Interactive Chat with Particle Current Background)
+       AI SHOPPING CONCIERGE INTERFACE / DASHBOARD
        ========================================== -->
   <section id="chat-app" class="chat-section-container">
-    <!-- Animated Flowing Particle Current Canvas Background -->
     <div class="chat-flow-canvas-container">
       <canvas id="flow-canvas"></canvas>
     </div>
 
-    <!-- Soft Ambient Radial Glow Behind Chat Panel -->
     <div class="chat-ambient-glow"></div>
 
     <div class="chat-wrapper">
-      <!-- Header -->
+      <!-- Minimalist Header -->
       <header class="chat-header">
         <div class="header-info">
-          <h2>AI Shopping Concierge</h2>
-          <span class="status-indicator">Autonomous Agent Online</span>
+          <div class="header-logo-badge">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+          </div>
+          <div>
+            <h2 id="dashboard-heading">AI Commerce Concierge</h2>
+            <div id="dashboard-subheading" class="status-indicator">Online &bull; Tool-Calling Active</div>
+          </div>
         </div>
         <div class="header-actions">
-          <span class="session-badge" style="color: var(--palette-accent-blue); border-color: rgba(59, 130, 246, 0.35);">⚡ Gemini Flash Tool-Calling</span>
+          <div id="chat-user-pill" class="chat-user-pill hidden">
+            <span class="chat-user-avatar" id="chat-user-avatar">U</span>
+            <span class="chat-user-name" id="chat-user-name">User</span>
+          </div>
           <span id="session-badge" class="session-badge" title="Active Session ID">Session: ...</span>
-          <button id="reset-session-btn" class="btn-secondary" title="Start a fresh conversation">New Chat</button>
-          <a href="/admin/orders" target="_blank" class="btn-secondary" style="text-decoration:none; display:inline-flex; align-items:center; gap:4px;" title="View read-only audit log registry">
-            📋 Audit Trail
+          <button id="reset-session-btn" class="btn-secondary" title="Start fresh conversation">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+            <span>New Chat</span>
+          </button>
+          <a href="/admin/orders" target="_blank" class="btn-secondary audit-link" title="Open read-only audit registry">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+            <span>Audit Trail</span>
           </a>
         </div>
       </header>
 
-      <!-- Messages Feed -->
+      <!-- Message History -->
       <main id="chat-messages" class="chat-messages">
-        <div class="message-row assistant">
-          <div class="message-bubble">
-            <p>👋 <strong>Welcome to the Autonomous AI Shopping Concierge.</strong><br/>I can search real database inventory, apply promotional discounts, and generate verified Razorpay checkout links with zero-trust server validation.</p>
-            <div class="quick-prompts">
-              <button class="chip" data-prompt="Show me running shoes under $180">🏃 Running shoes under $180</button>
-              <button class="chip" data-prompt="I want to buy AeroGlide with coupon WELCOME10">🏷️ Buy AeroGlide with 10% coupon</button>
-              <button class="chip" data-prompt="I want to buy AeroGlide with coupon EXPIRED50">🛡️ Guardrail Demo: Expired coupon</button>
-              <button class="chip" data-prompt="What promo coupons are available?">🎟️ Available promo coupons</button>
-            </div>
-          </div>
-        </div>
+        <!-- Initial welcome rendered dynamically by app.js -->
       </main>
 
       <!-- Typing Indicator -->
       <div id="typing-indicator" class="typing-indicator hidden">
         <div class="typing-bubble">
-          <span></span><span></span><span></span>
-          <span class="typing-text">Agent is thinking...</span>
+          <div class="typing-dots">
+            <span></span><span></span><span></span>
+          </div>
+          <span class="typing-text">Agent is processing...</span>
         </div>
       </div>
 
       <!-- Input Bar -->
       <footer class="chat-input-bar">
         <form id="chat-form" class="chat-form">
-          <input
-            type="text"
-            id="message-input"
-            placeholder="Ask for shoes, apply coupon (e.g. WELCOME10, SPRINT20), or checkout..."
-            autocomplete="off"
-            required
-          />
+          <div class="input-wrapper">
+            <svg class="input-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input
+              type="text"
+              id="message-input"
+              placeholder="Search shoes, apply promo codes, or proceed to checkout..."
+              autocomplete="off"
+              required
+            />
+          </div>
           <button type="submit" id="send-btn" class="btn-primary">
             <span>Send</span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
           </button>
         </form>
       </footer>

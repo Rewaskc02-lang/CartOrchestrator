@@ -1,9 +1,137 @@
 /**
  * AI Shopping Agent - Frontend Client Logic
+ * Hallmark & Skiper Minimalist Architecture with Personalized Auth
  */
 
 // ==========================================
-// 1. Session Management
+// 1. User Authentication (Name-Based Login)
+// ==========================================
+
+const getUserName = () => {
+  return localStorage.getItem('ai_agent_user_name') || '';
+};
+
+const setUserName = (name) => {
+  if (name && name.trim()) {
+    localStorage.setItem('ai_agent_user_name', name.trim());
+  } else {
+    localStorage.removeItem('ai_agent_user_name');
+  }
+  updateUserUI();
+};
+
+const updateUserUI = () => {
+  const userName = getUserName();
+  const navContainer = document.getElementById('nav-user-container');
+  const chatUserPill = document.getElementById('chat-user-pill');
+  const chatUserAvatar = document.getElementById('chat-user-avatar');
+  const chatUserName = document.getElementById('chat-user-name');
+  const dashboardHeading = document.getElementById('dashboard-heading');
+  const dashboardSubheading = document.getElementById('dashboard-subheading');
+
+  if (userName) {
+    const initial = userName.charAt(0).toUpperCase();
+
+    // 1. Top Nav User Badge
+    if (navContainer) {
+      navContainer.innerHTML = `
+        <div class="user-profile-badge">
+          <span class="user-avatar">${escapeHtml(initial)}</span>
+          <span class="user-display-name">${escapeHtml(userName)}</span>
+          <button id="logout-btn" class="user-logout-btn" title="Sign out / Switch user">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+          </button>
+        </div>
+      `;
+      const logoutBtn = document.getElementById('logout-btn');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+          setUserName('');
+          renderInitialWelcome();
+        });
+      }
+    }
+
+    // 2. Chat Header User Pill
+    if (chatUserPill) {
+      chatUserPill.classList.remove('hidden');
+      if (chatUserAvatar) chatUserAvatar.textContent = initial;
+      if (chatUserName) chatUserName.textContent = userName;
+    }
+
+    // 3. Dashboard Heading
+    if (dashboardHeading) {
+      dashboardHeading.textContent = `Welcome, ${userName}`;
+    }
+    if (dashboardSubheading) {
+      dashboardSubheading.textContent = 'Personalized Session Active';
+    }
+  } else {
+    // Guest State
+    if (navContainer) {
+      navContainer.innerHTML = `
+        <button id="nav-signin-btn" class="btn-auth-signin">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          <span>Sign In</span>
+        </button>
+      `;
+      const signinBtn = document.getElementById('nav-signin-btn');
+      if (signinBtn) {
+        signinBtn.addEventListener('click', openLoginModal);
+      }
+    }
+
+    if (chatUserPill) {
+      chatUserPill.classList.add('hidden');
+    }
+
+    if (dashboardHeading) {
+      dashboardHeading.textContent = 'AI Commerce Concierge';
+    }
+    if (dashboardSubheading) {
+      dashboardSubheading.textContent = 'Online • Tool-Calling Active';
+    }
+  }
+};
+
+const openLoginModal = () => {
+  const modal = document.getElementById('login-modal');
+  const input = document.getElementById('user-name-input');
+  if (modal) {
+    modal.classList.remove('hidden');
+    modal.setAttribute('aria-hidden', 'false');
+    if (input) {
+      input.value = getUserName();
+      setTimeout(() => input.focus(), 100);
+    }
+  }
+};
+
+const closeLoginModal = () => {
+  const modal = document.getElementById('login-modal');
+  if (modal) {
+    modal.classList.add('hidden');
+    modal.setAttribute('aria-hidden', 'true');
+  }
+};
+
+// ==========================================
+// 2. Skiper-15 Preloader Dismissal
+// ==========================================
+window.addEventListener('load', () => {
+  const preloader = document.getElementById('skiper-preloader');
+  if (preloader) {
+    setTimeout(() => {
+      preloader.classList.add('fade-out');
+      setTimeout(() => {
+        preloader.remove();
+      }, 500);
+    }, 600);
+  }
+});
+
+// ==========================================
+// 3. Session Management
 // ==========================================
 
 const getSessionId = () => {
@@ -24,6 +152,42 @@ const updateSessionBadge = () => {
   }
 };
 
+const renderInitialWelcome = () => {
+  const chatMessages = document.getElementById('chat-messages');
+  if (!chatMessages) return;
+
+  const userName = getUserName();
+  const greeting = userName
+    ? `Welcome back, <strong>${escapeHtml(userName)}</strong>. Your personalized commerce session is active.<br/>I search verified catalog inventory, apply promotional coupons with zero-trust validation, and generate secure Razorpay checkouts.`
+    : `<strong>Welcome to the Autonomous Commerce Concierge.</strong><br/>I search verified inventory, evaluate promotional coupons with server-side validation, and generate secure Razorpay checkouts.`;
+
+  chatMessages.innerHTML = `
+    <div class="message-row assistant">
+      <div class="message-bubble">
+        <p>${greeting}</p>
+        <div class="quick-prompts">
+          <button class="chip" data-prompt="Show me running shoes under $180">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <span>Running shoes under $180</span>
+          </button>
+          <button class="chip" data-prompt="I want to buy AeroGlide with coupon WELCOME10">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+            <span>Buy AeroGlide with 10% coupon</span>
+          </button>
+          <button class="chip" data-prompt="I want to buy AeroGlide with coupon EXPIRED50">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            <span>Guardrail Test: Expired coupon</span>
+          </button>
+          <button class="chip" data-prompt="What promo coupons are available?">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+            <span>Available promo coupons</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+};
+
 const resetSession = () => {
   localStorage.removeItem('ai_agent_session_id');
   const newSid = getSessionId();
@@ -31,26 +195,11 @@ const resetSession = () => {
   if (wsClient && wsClient.readyState === WebSocket.OPEN) {
     wsClient.send(JSON.stringify({ type: 'set_session', sessionId: newSid }));
   }
-  const chatMessages = document.getElementById('chat-messages');
-  if (chatMessages) {
-    chatMessages.innerHTML = `
-      <div class="message-row assistant">
-        <div class="message-bubble">
-          <p>🔄 <strong>Fresh session initiated.</strong><br/>How can I assist your shopping journey today?</p>
-          <div class="quick-prompts">
-            <button class="chip" data-prompt="Show me running shoes under $180">🏃 Running shoes under $180</button>
-            <button class="chip" data-prompt="I want to buy AeroGlide with coupon WELCOME10">🏷️ Buy AeroGlide with 10% coupon</button>
-            <button class="chip" data-prompt="I want to buy AeroGlide with coupon EXPIRED50">🛡️ Guardrail Demo: Expired coupon</button>
-            <button class="chip" data-prompt="What promo coupons are available?">🎟️ Available promo coupons</button>
-          </div>
-        </div>
-      </div>
-    `;
-  }
+  renderInitialWelcome();
 };
 
 // ==========================================
-// 2. UI Helpers & Message Rendering
+// 4. UI Helpers & Message Rendering
 // ==========================================
 
 const scrollToBottom = () => {
@@ -153,22 +302,34 @@ const appendAssistantMessage = (replyText, data = {}) => {
     checkoutBox.className = 'checkout-card';
     checkoutBox.innerHTML = `
       <div class="checkout-card-header">
-        <span>🛡️ Razorpay Verified Order</span>
-        <span style="font-size:0.75rem; color: #34D399; font-weight: normal; margin-left: auto;">Zero-Trust Verified</span>
+        <div class="checkout-rzp-logo">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L2 19.5h5.5l1.8-3.5h5.4l1.8 3.5H22L12 2zm0 5.8l2.6 5.2h-5.2L12 7.8z"/>
+          </svg>
+          <strong>Razorpay Verified Checkout</strong>
+        </div>
+        <span class="checkout-verified-badge">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          Server Verified
+        </span>
       </div>
-      <p style="font-size: 0.85rem; color: var(--palette-muted-slate); margin-top: 4px;">Click below to launch the verified Razorpay Checkout modal or open your direct secure link.</p>
+      <p style="font-size: 0.82rem; color: var(--text-secondary); margin-top: 4px;">
+        Order #${escapeHtml(data.orderId.slice(-8))}. Zero-trust cryptographic validation complete.
+      </p>
       <div class="checkout-actions">
         <button class="btn-pay-rzp" data-order-id="${data.orderId}" data-payment-link="${data.paymentLink}">
-          💳 Pay via Razorpay Modal
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+          <span>Pay via Razorpay Modal</span>
         </button>
         <a href="${data.paymentLink}" target="_blank" rel="noopener noreferrer" class="btn-link-fallback">
-          Open Direct Link ↗
+          <span>Direct Link</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
         </a>
       </div>
     `;
     bubble.appendChild(checkoutBox);
 
-    // Auto-trigger Razorpay modal
+    // Auto-trigger Razorpay modal after brief render
     setTimeout(() => {
       openRazorpayCheckout(data.orderId, data.paymentLink);
     }, 500);
@@ -186,7 +347,10 @@ const appendErrorBubble = (errorMessage) => {
 
   const bubble = document.createElement('div');
   bubble.className = 'message-bubble alert-error';
-  bubble.textContent = `⚠️ ${errorMessage}`;
+  bubble.innerHTML = `
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: text-bottom; margin-right: 4px;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+    <span>${escapeHtml(errorMessage)}</span>
+  `;
 
   row.appendChild(bubble);
   chatMessages.appendChild(row);
@@ -204,7 +368,7 @@ const escapeHtml = (unsafe) => {
 };
 
 // ==========================================
-// 3. Razorpay Checkout Integration
+// 5. Razorpay Checkout Integration
 // ==========================================
 
 let cachedKeyId = null;
@@ -230,7 +394,6 @@ const openRazorpayCheckout = async (orderId, paymentLink) => {
       return;
     }
 
-    // Fetch order metadata from /api/order/:id
     const orderRes = await fetch(`/api/order/${orderId}`);
     if (!orderRes.ok) {
       console.warn('Could not fetch order details for modal.');
@@ -249,20 +412,22 @@ const openRazorpayCheckout = async (orderId, paymentLink) => {
       key: keyId,
       amount: Math.round(order.total * 100),
       currency: 'INR',
-      name: 'AI Shopping Store',
+      name: 'Autonomous AI Commerce',
       description: `Order #${order._id.slice(-6)}`,
       order_id: order.razorpayOrderId,
       handler: function (response) {
         console.log('[Razorpay Payment Success]', response);
-        // Show success alert in chat
         const chatMessages = document.getElementById('chat-messages');
         const row = document.createElement('div');
         row.className = 'message-row assistant';
         row.innerHTML = `
           <div class="message-bubble alert-success">
-            <strong>✅ Payment Successful!</strong><br/>
-            Payment ID: <code>${response.razorpay_payment_id}</code><br/>
-            Order total of $${order.total} has been confirmed. Thank you for your purchase!
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <div>
+              <strong>Payment Successful</strong><br/>
+              Payment ID: <code>${response.razorpay_payment_id}</code><br/>
+              Order total of $${order.total} confirmed.
+            </div>
           </div>
         `;
         chatMessages.appendChild(row);
@@ -276,7 +441,8 @@ const openRazorpayCheckout = async (orderId, paymentLink) => {
           row.className = 'message-row assistant';
           row.innerHTML = `
             <div class="message-bubble alert-warning">
-              ℹ️ Payment was not completed. You can click <strong>"Pay via Razorpay"</strong> above anytime to resume checkout or continue shopping!
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+              <span>Payment modal closed. You can click <strong>"Pay via Razorpay Modal"</strong> anytime to complete the purchase.</span>
             </div>
           `;
           chatMessages.appendChild(row);
@@ -284,7 +450,7 @@ const openRazorpayCheckout = async (orderId, paymentLink) => {
         },
       },
       theme: {
-        color: '#0f172a',
+        color: '#0052cc',
       },
     };
 
@@ -296,7 +462,8 @@ const openRazorpayCheckout = async (orderId, paymentLink) => {
       row.className = 'message-row assistant';
       row.innerHTML = `
         <div class="message-bubble alert-error">
-          ❌ Payment failed: ${response.error.description || 'Transaction declined'}
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+          <span>Payment failed: ${response.error.description || 'Transaction declined'}</span>
         </div>
       `;
       chatMessages.appendChild(row);
@@ -310,7 +477,7 @@ const openRazorpayCheckout = async (orderId, paymentLink) => {
 };
 
 // ==========================================
-// 4. Global Real-time WebSocket Client
+// 6. Global Real-time WebSocket Client
 // ==========================================
 
 let wsClient = null;
@@ -344,7 +511,7 @@ const initWebSocket = () => {
         } else if (payload.type === 'chat_response') {
           setInputState(false);
           const typingText = document.querySelector('.typing-text');
-          if (typingText) typingText.textContent = 'Agent is thinking...';
+          if (typingText) typingText.textContent = 'Agent is processing...';
           appendAssistantMessage(payload.reply, payload.data || {});
         } else if (payload.type === 'error') {
           setInputState(false);
@@ -379,7 +546,6 @@ const sendMessage = async (userMessage) => {
 
   const sessionId = getSessionId();
 
-  // 1. If WebSocket is active, send via fast WebSocket
   if (wsClient && wsClient.readyState === WebSocket.OPEN) {
     wsClient.send(
       JSON.stringify({
@@ -391,7 +557,6 @@ const sendMessage = async (userMessage) => {
     return;
   }
 
-  // 2. HTTP Fallback if WebSocket is connecting or offline
   try {
     const response = await fetch('/api/chat', {
       method: 'POST',
@@ -421,11 +586,13 @@ const sendMessage = async (userMessage) => {
 };
 
 // ==========================================
-// 5. Event Listeners Initialization
+// 7. Event Listeners Initialization
 // ==========================================
 
 document.addEventListener('DOMContentLoaded', () => {
   updateSessionBadge();
+  updateUserUI();
+  renderInitialWelcome();
   initWebSocket();
 
   const chatForm = document.getElementById('chat-form');
@@ -433,7 +600,42 @@ document.addEventListener('DOMContentLoaded', () => {
   const resetBtn = document.getElementById('reset-session-btn');
   const chatMessages = document.getElementById('chat-messages');
 
-  // Submit Handler
+  // Login Modal Events
+  const loginForm = document.getElementById('login-form');
+  const userNameInput = document.getElementById('user-name-input');
+  const closeLoginBtn = document.getElementById('close-login-btn');
+  const loginModal = document.getElementById('login-modal');
+
+  if (loginForm) {
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const enteredName = userNameInput ? userNameInput.value : '';
+      if (enteredName && enteredName.trim()) {
+        setUserName(enteredName.trim());
+        closeLoginModal();
+        renderInitialWelcome();
+      }
+    });
+  }
+
+  if (closeLoginBtn) {
+    closeLoginBtn.addEventListener('click', closeLoginModal);
+  }
+
+  if (loginModal) {
+    loginModal.addEventListener('click', (e) => {
+      if (e.target === loginModal) {
+        closeLoginModal();
+      }
+    });
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeLoginModal();
+    }
+  });
+
   if (chatForm) {
     chatForm.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -443,12 +645,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Reset Session
   if (resetBtn) {
     resetBtn.addEventListener('click', resetSession);
   }
 
-  // Click delegation for quick prompt chips, card buttons & pay modal buttons
   if (chatMessages) {
     chatMessages.addEventListener('click', (e) => {
       const chip = e.target.closest('.chip');

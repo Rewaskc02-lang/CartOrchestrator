@@ -1,67 +1,188 @@
-# AI Shopping Agent - Backend, Razorpay & LLM Agent Integration
+# Autonomous AI Commerce Concierge & Cart Orchestrator
 
-Node.js + Express backend with MongoDB (Mongoose) data layer, Razorpay test-mode payment integration, and an autonomous AI shopping agent powered by Google Gemini API tool-calling (`@google/genai`).
+An enterprise-grade, zero-trust autonomous AI shopping engine powered by **Google Gemini Tool-Calling (`@google/genai`)**, **Node.js/Express**, **MongoDB (Mongoose)**, and **Razorpay Payment Gateway**.
 
----
-
-## 🏆 Judging Deliverables
-
-### 1. Where the Audit Trail Lives & How to View It
-- **Order Registry Overview**: Navigate to [`http://localhost:5001/admin/orders`](http://localhost:5001/admin/orders) to view all processed orders, their current lifecycle status (`pending`, `paid`, `failed`), monetary totals, and applied coupons.
-- **Detailed Audit Trail View**: Click on any order or navigate to [`http://localhost:5001/admin/orders/:id`](http://localhost:5001/admin/orders/6a962dd20b2007e79fe47c5d) to inspect the complete, timestamped, chronological `auditLog` table showing:
-  - **Action**: `order_created`, `payment_captured`, `payment_failed`
-  - **Actor**: `system`, `razorpay_webhook`, `ai_agent`
-  - **Timestamp**: Precise ISO timestamp and local datetime
-  - **Details**: Exact cryptographic and monetary payloads (subtotals, discounts, Razorpay IDs, webhook events)
-- *Note for Judges*: You can also click the **"📋 Audit Trail"** button in the chat interface header at [`http://localhost:5001/`](http://localhost:5001/) to jump directly to this view. *(Demo mode: unauthenticated for local evaluation).*
+Designed with **Nutlope Hallmark** minimalist principles and featuring a **Skiper-15 3D isometric preloader**, precision vector branding, real-time WebSocket communication, and an immutable cryptographic audit registry.
 
 ---
 
-### 2. Deliberate Failure Demos & How to Trigger Them
-
-During live judge evaluation, type these exact messages into the chat interface at [`http://localhost:5001/`](http://localhost:5001/) or send via `curl`:
-
-#### Demo A: Expired Coupon Failure (Explainable Rejection & Active Alternatives)
-- **What to type**:
-  > *"I want to add 1 pair of AeroGlide to my cart and apply coupon EXPIRED50"*
-- **Expected Outcome**:
-  - The tool deterministically checks the database and flags that `EXPIRED50` expired on `2024-01-01`.
-  - The assistant explicitly and honestly tells the user:
-    > *"Unfortunately, coupon EXPIRED50 could not be applied because it expired on January 1, 2024. However, you can use our active coupon SPRINT20 (20% off) or WELCOME10 (10% off) instead!"*
-  - The system **never** hallucinates a discount, never papers over the failure, and never guesses.
-
-#### Demo B: Minimum Order Value Rejection
-- **What to type**:
-  > *"I want to add 1 SpeedLace Elastic No-Tie Lock Laces to my cart and use coupon code FLAT50"*
-- **Expected Outcome**:
-  - The tool calculates that the item is $14.99, while `FLAT50` requires a $200 minimum order.
-  - The assistant explains the threshold clearly:
-    > *"Coupon FLAT50 requires a minimum order value of $200. Your current cart subtotal is $14.99."*
-
-#### Demo C: Out-of-Stock / Non-Existent Product
-- **What to type**:
-  > *"Can I buy the Quantum Levitation Sneaker 3000?"*
-- **Expected Outcome**:
-  - The `searchProducts` tool queries MongoDB and returns 0 matches.
-  - The assistant politely informs the customer that the item is unavailable and offers real in-stock recommendations from the catalog.
+## 📑 Table of Contents
+- [System Architecture & Flow](#-system-architecture--flow)
+- [Key Architectural Pillars](#-key-architectural-pillars)
+- [UI/UX & Hallmark Design System](#-uiux--hallmark-design-system)
+- [Available AI Tools (Server-Gated)](#-available-ai-tools-server-gated)
+- [Interactive Demos & Guardrail Verifications](#-interactive-demos--guardrail-verifications)
+- [API & Route Reference](#-api--route-reference)
+- [Setup & Quickstart Guide](#-setup--quickstart-guide)
+- [Security & Production Hardening](#-security--production-hardening)
+- [Audit Registry & Observability](#-audit-registry--observability)
 
 ---
 
-### 3. Guardrail Architecture Explanation
+## 🏛 System Architecture & Flow
 
-> **Explainable, Bounded, and Gated AI**: The LLM acts purely as a natural language interface that requests actions via strictly typed, named tools (`searchProducts`, `applyCoupon`, `generatePaymentLink`, `addToCart`). The LLM **never** possesses raw database write access and **never** communicates with Razorpay directly. All monetary calculations, inventory checks, coupon constraints, and payment link creations execute deterministically on the server via MongoDB snapshots. Crucially, every state transition and order-touching action is validated and chronologically logged into an immutable `auditLog` before and after execution, ensuring full traceability and zero-trust operation.
+```
++-------------------------------------------------------------------------+
+|                  MINIMALIST FRONTEND (HTML5 / CSS / JS)                 |
+|  - Skiper-15 3D Preloader  - Flow-Field Particle Canvas                 |
+|  - Name Authentication     - Razorpay Modal Checkout SDK                |
++------------------------------------+------------------------------------+
+                                     |
+                          WebSocket / REST API
+                                     |
+                                     v
++-------------------------------------------------------------------------+
+|                        EXPRESS BACKEND ENGINE                           |
+|  - Rate Limiter (Per-Session & Global)                                  |
+|  - Real-Time WebSocket Session Dispatcher                               |
+|  - Request Logger & Security Headers                                    |
++------------------------------------+------------------------------------+
+                                     |
+             +-----------------------+-----------------------+
+             |                                               |
+             v                                               v
++-----------------------------+               +-----------------------------+
+|    GEMINI LLM ENGINE        |               |   ZERO-TRUST TOOL RUNTIME   |
+| - Natural Language Parser   |  Tool Calls   | - searchProducts            |
+| - Parameter Intent Extractor| ------------> | - applyCoupon               |
+| - Strict Function Calling   | <------------ | - generatePaymentLink       |
++-----------------------------+  Tool Results | - addToCart                 |
+                                              | - getOrderHistory           |
+                                              +--------------+--------------+
+                                                             |
+                                           +-----------------+-----------------+
+                                           |                                   |
+                                           v                                   v
+                            +-----------------------------+     +-----------------------------+
+                            |       MONGODB ATLAS         |     |      RAZORPAY GATEWAY       |
+                            | - Products (Atomic Stock)   |     | - Order Creation API        |
+                            | - Coupons (Date & Caps)     |     | - Payment Link Webhooks     |
+                            | - Immutable Audit Logs      |     | - HMAC SHA-256 Signatures   |
+                            +-----------------------------+     +-----------------------------+
+```
 
 ---
 
-## 1. Setup & Environment Configuration
+## 🛡 Key Architectural Pillars
 
-### Install Dependencies
+### 1. Zero-Trust Server AI Gating
+- The LLM **never** touches raw database queries, **never** calculates discounts or totals, and **never** creates Razorpay orders directly.
+- All monetary calculations, stock deductions, coupon validation checks, and payment links are computed deterministically on the server via MongoDB snapshots.
+
+### 2. Immutable Cryptographic Audit Registry
+- Every transition in an order's lifecycle is logged into an immutable `auditLog` with:
+  - **Timestamp**: High-precision ISO datetime.
+  - **Actor**: `system`, `razorpay_webhook`, `ai_agent`, or `customer`.
+  - **Action**: `order_created`, `payment_captured`, `payment_failed`, `coupon_applied`.
+  - **Payload**: Cryptographic parameters, price breakdowns, Razorpay order IDs, and webhook signatures.
+
+### 3. Dual-Mode Razorpay Integration
+- **Interactive In-App Modal**: Built with Razorpay Checkout JS SDK for immediate in-chat completion.
+- **Direct Payment Links**: Generates hosted Razorpay fallback URLs for multi-device checkout.
+- **HMAC SHA-256 Webhook**: Webhook endpoint verifies signatures, decrements stock atomically, and records payments idempotently.
+
+---
+
+## 🎨 UI/UX & Hallmark Design System
+
+The frontend is built according to **Nutlope Hallmark** design principles and inspired by **Skiper UI (skiper15)**:
+
+- **Zero "AI Slop"**: No cartoonish emojis (`👋`, `🏃`, `🛡️`, `💳`, `⚡`), no generic rainbow gradients, and no cluttered marketing wrappers.
+- **Standard Vector Assets**: Official **Razorpay geometric vector logo**, Geist SVG glyphs, and standard security badges.
+- **Skiper-15 3D Isometric Preloader**: Pure CSS 3D rotating wireframe isometric cube with electric blue perspective highlights.
+- **Monochrome Dark Palette**:
+  - Base: `#000000` & `#09090b`
+  - Surfaces: `#121215`, `#18181b`, `#27272a`
+  - Accents: Sapphire Electric Blue (`#3b82f6`) and Emerald (`#10b981`)
+- **Name-Based Authentication**:
+  - Quick sign-in modal with local persistence.
+  - Personalized top navigation bar, avatar pill, and dynamic dashboard greetings (*"Welcome, [Name]"*).
+
+---
+
+## ⚙️ Available AI Tools (Server-Gated)
+
+| Tool Name | Purpose | Server Validation & Guardrails |
+|---|---|---|
+| `searchProducts` | Query catalog by text, category, or price cap | Fuzzy matching, price filtering, stock availability check |
+| `applyCoupon` | Apply promotional discounts to session cart | Expiration date check, minimum order value, usage limit per customer |
+| `addToCart` | Add items and quantities to active session | Live inventory check, stock cap enforcement |
+| `generatePaymentLink` | Create verified Razorpay order & checkout card | Atomic price recalculation from DB, creates Razorpay Order API payload |
+| `getOrderHistory` | Retrieve customer's past orders | Queries verified orders by active `sessionId` |
+
+---
+
+## 🧪 Interactive Demos & Guardrail Verifications
+
+Test these realistic scenarios directly in the chat interface at [`http://localhost:5001`](http://localhost:5001):
+
+### Demo 1: Expired Coupon Guardrail
+- **User Prompt**:
+  > *"I want to buy 1 pair of AeroGlide with coupon EXPIRED50"*
+- **Observed Behavior**:
+  - The server verifies `EXPIRED50` and discovers its expiration date (`2024-01-01`).
+  - Assistant responds with clear, explainable feedback and recommends active coupons like `SPRINT20` (20% off) or `WELCOME10` (10% off).
+  - Discount is **strictly rejected**; the system never guesses or hallucinates.
+
+### Demo 2: Minimum Order Threshold
+- **User Prompt**:
+  > *"Add SpeedLace Elastic Laces to my cart and use coupon FLAT50"*
+- **Observed Behavior**:
+  - Tool calculates the subtotal ($14.99), whereas `FLAT50` requires a $200 minimum order.
+  - Assistant explains the threshold restriction and provides current cart balance.
+
+### Demo 3: Out-of-Stock Catalog Fallback
+- **User Prompt**:
+  > *"Do you have Quantum Levitation Sneaker 3000?"*
+- **Observed Behavior**:
+  - Tool returns 0 matches.
+  - Assistant politely explains the item is unavailable and suggests real database footwear items.
+
+### Demo 4: End-to-End Razorpay Checkout
+- **User Prompt**:
+  > *"Show me running shoes under $180 and buy the first one with coupon SPRINT20"*
+- **Observed Behavior**:
+  - Shows product card, applies 20% discount, generates verified order, and launches the Razorpay payment modal.
+
+---
+
+## 🔌 API & Route Reference
+
+### Client & Agent Endpoints
+- `GET /` — Minimalist UI/UX with 3D preloader, chat concierge, and top navigation
+- `POST /api/chat` — Multi-turn Gemini Tool-Calling agent with session rate limiting
+- `POST /api/order` — Deterministic order generation & Razorpay payment link dispatch
+- `GET /api/order/:id` — JSON order details with chronological audit log
+
+### Payment & Webhook Endpoints
+- `POST /webhook/razorpay` — HMAC SHA-256 verified webhook listener
+- `POST /api/webhook/razorpay` — Alias webhook route for external proxy compatibility
+- `GET /api/config/razorpay` — Returns public Razorpay Key ID for client modal SDK
+
+### Observability & Administration
+- `GET /admin/orders` — Read-only Order Registry displaying all transactions
+- `GET /admin/orders/:id` — Human-readable Order Audit Trail inspection page
+- `GET /health` — Service & MongoDB connectivity status check
+
+---
+
+## 🚀 Setup & Quickstart Guide
+
+### 1. Prerequisites
+- **Node.js** (v18.0.0 or higher)
+- **MongoDB** (Local instance or MongoDB Atlas cluster)
+- **Razorpay Account** (Test Mode credentials)
+- **Google Gemini API Key**
+
+### 2. Installation
 ```bash
+git clone <repository_url>
+cd Razor
 npm install
 ```
 
-### Configure Environment Variables
-Ensure `.env` contains your MongoDB URI, Razorpay test credentials, and Gemini API key:
+### 3. Environment Variables
+Create a `.env` file in the project root:
 ```env
 PORT=5001
 MONGO_URI=mongodb://127.0.0.1:27017/ai_shopping_agent
@@ -71,73 +192,57 @@ RAZORPAY_WEBHOOK_SECRET=YourWebhookSecret
 GEMINI_API_KEY=YourGeminiApiKey
 ```
 
-### Seed Database
-Populate 18 realistic footwear & apparel items and promo coupons (including demo expired and capped coupons):
+### 4. Seed Inventory & Coupons
+Populate 18 verified footwear products and test coupons:
 ```bash
 npm run seed
 ```
 
-### Run Server
+### 5. Run the Application
 ```bash
-# Development (with auto-reload)
+# Development (with nodemon auto-reload)
 npm run dev
 
 # Production
 npm start
 ```
+Open **`http://localhost:5001`** in your browser.
 
-### Access Frontend Chat Widget
-Open your browser at:
-👉 **`http://localhost:5001/`**
-
----
-
-## 2. API Endpoints Reference
-
-- `GET /` — Frontend chat application
-- `POST /api/chat` — Multi-turn AI Agent endpoint with function calling
-- `POST /api/order` — Server-side order & Razorpay payment link generation
-- `GET /api/order/:id` — JSON order & audit trail inspection
-- `POST /webhook/razorpay` — HMAC SHA256 verified payment webhook handler
-- `GET /admin/orders` — Read-only Admin Order Registry
-- `GET /admin/orders/:id` — Human-readable Order Audit Trail inspection page
-- `GET /health` — Service & database health check
-
----
-
-## 3. Webhook Simulation (`POST /webhook/razorpay`)
-
-Simulate an incoming Razorpay `payment.captured` event locally:
+### 6. Run Automated Tests
 ```bash
-node test-local-webhook.js
+npm test
 ```
 
 ---
 
-## 4. Demo Management
+## 🔒 Security & Production Hardening
 
-### Reset Demo to Clean State
-Between demo runs, reset all transactional data (orders, conversations, carts) while re-seeding fresh Products and Coupons:
-```bash
-npm run reset-demo
-```
+- **HMAC-SHA256 Webhook Verification**: Rejects tampered, unsigned, or forged webhook requests (`400 SignatureMissing` / `400 SignatureInvalid`).
+- **Session & Global Rate Limiting**:
+  - 10 requests per minute per chat session.
+  - 100 requests per minute global firewall.
+- **Idempotent Inventory Decrements**: Webhook delivery retries will never decrement inventory twice for the same transaction.
+- **Zero Raw LLM DB Writes**: The LLM output is parsed, validated, and executed strictly through deterministic controller schemas.
 
 ---
 
-## 5. Enhanced Features (Post-Testing)
+## 📊 Audit Registry & Observability
 
-### ✨ New Features Added
-- **Request Logging Middleware**: All API requests logged with method, route, status, and duration for real-time debugging during demo
-- **Rate Limiting on `/api/chat`**: Per-session (10 req/min) and global (100 req/min) limits prevent runaway LLM costs
-- **Order History Tool**: Users can ask "What did I order?" — new 5th AI tool `getOrderHistory` retrieves all past orders
-- **Demo Reset Script**: `npm run reset-demo` clears transactional data and re-seeds Products/Coupons in 10 seconds
+Judges and evaluators can monitor all agent decisions and financial transactions in real time:
 
-### 🔒 Security Audit Results
-- ✅ Webhook HMAC-SHA256 signature verification rejects tampered payloads (tested with invalid signatures)
-- ✅ Input validation on all endpoints (missing sessionId, empty message, invalid items, non-existent coupons)
-- ✅ API keys read from environment only (never hardcoded or logged)
-- ✅ Stock decrement is idempotent (webhook retries won't double-decrement)
-- ✅ Coupon usage counts increment only on confirmed payment (not on link generation)
+1. Click **"Audit Trail"** in the top navigation or chat header.
+2. Open [`http://localhost:5001/admin/orders`](http://localhost:5001/admin/orders) for the overview registry.
+3. Drill down into any individual order (e.g. [`http://localhost:5001/admin/orders/:id`](http://localhost:5001/admin/orders/)) to inspect the chronological timeline of actions, actors, timestamps, and payload snapshots.
 
-### 📋 Test Report
-See [TEST_REPORT.md](./TEST_REPORT.md) for comprehensive testing results, security audit, and verification of all guardrails.
+---
+
+## 🛠 Project Scripts
+
+| Command | Action |
+|---|---|
+| `npm start` | Launches production server |
+| `npm run dev` | Launches dev server with live hot reload |
+| `npm test` | Runs the automated test suite (`node --test`) |
+| `npm run seed` | Seeds catalog items and promo codes |
+| `npm run reset-demo` | Clears transactions and re-seeds fresh data in seconds |
+| `node test-local-webhook.js` | Simulates a Razorpay `payment.captured` webhook payload |
